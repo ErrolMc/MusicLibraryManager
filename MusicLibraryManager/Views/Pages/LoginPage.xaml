@@ -1,14 +1,17 @@
 ﻿<Page
-    x:Class="MusicLibraryManager.MainPage"
+    x:Class="MusicLibraryManager.Views.Pages.LoginPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:MusicLibraryManager"
+    xmlns:local="using:MusicLibraryManager.Views.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel>
+            <TextBlock Text="Login Page"/>
+            <Button Content="Goto Main" HorizontalAlignment="Center" Command="{x:Bind ViewModel.GotoMainCommand}"/>
+        </StackPanel>
     </Grid>
 </Page>

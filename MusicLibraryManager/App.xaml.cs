@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿using Microsoft.Extensions.DependencyInjection;
+using MusicLibraryManager.Source.Services;
+using MusicLibraryManager.Source.Services.Concrete;
+using MusicLibraryManager.ViewModels.Pages;
+using MusicLibraryManager.Views.Pages;
+using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace MusicLibraryManager
@@ -22,6 +17,9 @@ namespace MusicLibraryManager
     /// </summary>
     sealed partial class App : Application
     {
+        public static IServiceProvider Services { get; private set; }
+        private Frame _rootFrame;
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -32,6 +30,17 @@ namespace MusicLibraryManager
             this.Suspending += OnSuspending;
         }
 
+        private void ConfigureServices()
+        {
+            var serviceCollection = new ServiceCollection();
+
+            serviceCollection.AddSingleton<INavigationService>(provider => new NavigationService(_rootFrame));
+            serviceCollection.AddTransient<LoginPageViewModel>();
+            serviceCollection.AddTransient<MainPageViewModel>();
+
+            Services = serviceCollection.BuildServiceProvider();
+        }
+
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
@@ -39,38 +48,27 @@ namespace MusicLibraryManager
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
+            _rootFrame = Window.Current.Content as Frame;
 
-            // Do not repeat app initialization when the Window already has content,
-            // just ensure that the window is active
-            if (rootFrame == null)
+            if (_rootFrame == null)
             {
-                // Create a Frame to act as the navigation context and navigate to the first page
-                rootFrame = new Frame();
+                _rootFrame = new Frame();
+                _rootFrame.NavigationFailed += OnNavigationFailed;
 
-                rootFrame.NavigationFailed += OnNavigationFailed;
-
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    //TODO: Load state from previously suspended application
-                }
-
-                // Place the frame in the current Window
-                Window.Current.Content = rootFrame;
+                ConfigureServices();
             }
 
             if (e.PrelaunchActivated == false)
             {
-                if (rootFrame.Content == null)
+                if (_rootFrame.Content == null)
                 {
-                    // When the navigation stack isn't restored navigate to the first page,
-                    // configuring the new page by passing required information as a navigation
-                    // parameter
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    var navigationService = Services.GetRequiredService<INavigationService>();
+                    navigationService.Navigate<LoginPage>();
                 }
-                // Ensure the current window is active
                 Window.Current.Activate();
             }
+
+            Window.Current.Content = _rootFrame;
         }
 
         /// <summary>
