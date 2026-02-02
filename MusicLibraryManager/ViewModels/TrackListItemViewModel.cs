@@ -14,15 +14,28 @@ public partial class TrackListItemViewModel : ObservableObject
     [ObservableProperty]
     private int year;
 
-    public TrackListItemViewModel()
+    private readonly Action<TrackListItemViewModel>? _onClickAction;
+    private readonly Track? _track;
+
+    public Track? Track => _track;
+
+    public ICommand ClickCommand { get; }
+
+    public TrackListItemViewModel(Track track, Action<TrackListItemViewModel> onClickAction)
     {
+        SongName = track.Title;
+        Artist = track.Artist;
+        AlbumTitle = track.Album;
+        Year = track.Year ?? 0;
+
+        _track = track;
+        _onClickAction = onClickAction;
+
+        ClickCommand = new RelayCommand(OnClick);
     }
 
-    public TrackListItemViewModel(string songName, string artist, string albumTitle, int year)
+    private void OnClick()
     {
-        SongName = songName;
-        Artist = artist;
-        AlbumTitle = albumTitle;
-        Year = year;
+        _onClickAction?.Invoke(this);
     }
 }

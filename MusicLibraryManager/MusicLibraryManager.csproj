@@ -38,6 +38,9 @@
     </UnoFeatures>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="TagLibSharp" />
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Presentation\SplitPanelPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

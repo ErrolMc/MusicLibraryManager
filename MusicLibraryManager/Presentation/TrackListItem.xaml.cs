@@ -38,6 +38,15 @@ public sealed partial class TrackListItem : UserControl
 
     private void ItemBorder_PointerReleased(object sender, PointerRoutedEventArgs e)
     {
+        if (_isPressed && _isHovered)
+        {
+            // Execute click command when released while still hovering
+            if (DataContext is TrackListItemViewModel viewModel)
+            {
+                viewModel.ClickCommand.Execute(null);
+            }
+        }
+
         _isPressed = false;
         UpdateVisualState();
         ItemBorder.ReleasePointerCapture(e.Pointer);

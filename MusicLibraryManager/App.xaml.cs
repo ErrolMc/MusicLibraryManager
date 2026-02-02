@@ -5,6 +5,16 @@ namespace MusicLibraryManager;
 public partial class App : Application
 {
     /// <summary>
+    /// Gets the current App instance.
+    /// </summary>
+    public static new App Instance => (App)Application.Current;
+
+    /// <summary>
+    /// Gets the main window of the application.
+    /// </summary>
+    public new Window? MainWindow { get; private set; }
+
+    /// <summary>
     /// Initializes the singleton application object. This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
@@ -13,7 +23,6 @@ public partial class App : Application
         this.InitializeComponent();
     }
 
-    protected Window? MainWindow { get; private set; }
     protected IHost? Host { get; private set; }
 
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
@@ -71,8 +80,10 @@ public partial class App : Application
                 })
                 .ConfigureServices((context, services) =>
                 {
-                    // TODO: Register your services
-                    //services.AddSingleton<IMyService, MyService>();
+                    services.AddSingleton<IMusicLibraryService, MusicLibraryService>();
+                    services.AddSingleton<TrackListPanelViewModel>();
+                    services.AddSingleton<MenuBarViewModel>();
+                    services.AddSingleton<TrackInfoPanelViewModel>();
                 })
                 .UseNavigation(RegisterRoutes)
             );

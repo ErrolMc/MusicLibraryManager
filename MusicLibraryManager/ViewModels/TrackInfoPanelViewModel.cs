@@ -31,4 +31,17 @@ public partial class TrackInfoPanelViewModel : ObservableObject
 
     [ObservableProperty]
     private string? albumPhotoPath;
+
+    public void SetInfoFromSong(Track track)
+    {
+        Title = track.Title;
+        Artist = track.Artist;
+        Album = track.Album;
+        Year = (track.Year ?? 0).ToString();
+        Genre = track.Genre;
+        Comment = "";
+        Composer = "";
+        AlbumArtist = "";
+        Track = (track.TrackNumber ?? 0).ToString();
+    }
 }

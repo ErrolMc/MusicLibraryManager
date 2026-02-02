@@ -1,4 +1,6 @@
 using System.Collections.ObjectModel;
+using MusicLibraryManager.Models;
+using MusicLibraryManager.Services;
 
 namespace MusicLibraryManager.ViewModels;
 
@@ -10,16 +12,31 @@ public partial class TrackListPanelViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<TrackListItemViewModel> tracks = new();
 
-    public TrackListPanelViewModel()
+    private readonly IMusicLibraryService _musicLibraryService;
+    private readonly TrackInfoPanelViewModel _trackInfoPanelViewModel;
+
+    public TrackListPanelViewModel(IMusicLibraryService musicLibraryService, TrackInfoPanelViewModel trackInfoPanelViewModel)
     {
-        // Add some sample tracks for demonstration
-        Tracks.Add(new TrackListItemViewModel("Bohemian Rhapsody", "Queen", "A Night at the Opera", 1975));
-        Tracks.Add(new TrackListItemViewModel("Hotel California", "Eagles", "Hotel California", 1977));
-        Tracks.Add(new TrackListItemViewModel("Stairway to Heaven", "Led Zeppelin", "Led Zeppelin IV", 1971));
-        Tracks.Add(new TrackListItemViewModel("Imagine", "John Lennon", "Imagine", 1971));
-        Tracks.Add(new TrackListItemViewModel("Smells Like Teen Spirit", "Nirvana", "Nevermind", 1991));
-        Tracks.Add(new TrackListItemViewModel("Billie Jean", "Michael Jackson", "Thriller", 1982));
-        Tracks.Add(new TrackListItemViewModel("Like a Rolling Stone", "Bob Dylan", "Highway 61 Revisited", 1965));
-        Tracks.Add(new TrackListItemViewModel("Hey Jude", "The Beatles", "Hey Jude", 1968));
+        _musicLibraryService = musicLibraryService;
+        _trackInfoPanelViewModel = trackInfoPanelViewModel;
+    }
+
+    public async Task LoadSongsFromFolderAsync(string folderPath)
+    {
+        IReadOnlyList<Track> tracks = await _musicLibraryService.GetSongsFromFolderAsync(folderPath);
+
+        Tracks.Clear();
+        foreach (Track track in tracks)
+        {
+            Tracks.Add(new TrackListItemViewModel(track, OnSelectTrack));
+        }
+    }
+
+    private void OnSelectTrack(TrackListItemViewModel trackListItem)
+    {
+        Track? track = trackListItem.Track;
+        if (track == null)
+            return;
+        _trackInfoPanelViewModel.SetInfoFromSong(track);
     }
 }

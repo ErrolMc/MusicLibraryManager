@@ -17,7 +17,7 @@ d:DataContext="{d:DesignInstance Type=vm:SplitPanelViewModel}">
         </Grid.RowDefinitions>
 
         <!-- Top Menu Bar -->
-        <views:MenuBar Grid.Row="0" />
+        <views:MenuBar Grid.Row="0" DataContext="{Binding MenuBarViewModel}" />
 
         <!-- Resizable Split Panel Content -->
         <Grid Grid.Row="1"
@@ -29,7 +29,7 @@ d:DataContext="{d:DesignInstance Type=vm:SplitPanelViewModel}">
             </Grid.ColumnDefinitions>
 
             <!-- Left Panel -->
-            <views:TrackInfoPanel Grid.Column="0" />
+            <views:TrackInfoPanel Grid.Column="0" DataContext="{Binding TrackInfoPanelViewModel}"/>
 
             <!-- Resizable Splitter / Grip -->
             <Border Grid.Column="1"
@@ -52,7 +52,7 @@ d:DataContext="{d:DesignInstance Type=vm:SplitPanelViewModel}">
             </Border>
 
             <!-- Right Panel -->
-            <views:TrackListPanel Grid.Column="2" />
+            <views:TrackListPanel Grid.Column="2" DataContext="{Binding TrackListPanelViewModel}" />
         </Grid>
     </Grid>
 </Page>

@@ -7,6 +7,8 @@ global using Microsoft.Extensions.Logging;
 global using Microsoft.Extensions.Options;
 global using MusicLibraryManager.Models;
 global using MusicLibraryManager.Presentation;
+global using MusicLibraryManager.Services;
+global using MusicLibraryManager.Services.Concrete;
 global using MusicLibraryManager.ViewModels;
 global using MusicLibraryManager.Services.Endpoints;
 global using ApplicationExecutionState = Windows.ApplicationModel.Activation.ApplicationExecutionState;
