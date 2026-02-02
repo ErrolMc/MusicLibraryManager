@@ -1,0 +1,58 @@
+﻿<Page x:Class="MusicLibraryManager.Presentation.SplitPanelPage"
+xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+xmlns:vm="using:MusicLibraryManager.ViewModels"
+xmlns:views="using:MusicLibraryManager.Presentation"
+xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+xmlns:utu="using:Uno.Toolkit.UI"
+Background="{ThemeResource BackgroundBrush}"
+mc:Ignorable="d"
+d:DataContext="{d:DesignInstance Type=vm:SplitPanelViewModel}">
+
+    <Grid utu:SafeArea.Insets="VisibleBounds">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Top Menu Bar -->
+        <views:MenuBar Grid.Row="0" />
+
+        <!-- Resizable Split Panel Content -->
+        <Grid Grid.Row="1"
+              x:Name="SplitContainer">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="LeftColumn" Width="*" MinWidth="100" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition x:Name="RightColumn" Width="*" MinWidth="100" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Left Panel -->
+            <views:LeftPanel Grid.Column="0" />
+
+            <!-- Resizable Splitter / Grip -->
+            <Border Grid.Column="1"
+                    x:Name="Splitter"
+                    Width="8"
+                    Background="Transparent"
+                    Margin="0,16"
+                    CornerRadius="4"
+                    PointerEntered="Splitter_PointerEntered"
+                    PointerExited="Splitter_PointerExited"
+                    PointerPressed="Splitter_PointerPressed"
+                    PointerMoved="Splitter_PointerMoved"
+                    PointerReleased="Splitter_PointerReleased"
+                    PointerCaptureLost="Splitter_PointerCaptureLost">
+                <Border Background="{ThemeResource OnSurfaceVariantBrush}"
+                        Opacity="0.3"
+                        Width="4"
+                        CornerRadius="2"
+                        HorizontalAlignment="Center" />
+            </Border>
+
+            <!-- Right Panel -->
+            <views:RightPanel Grid.Column="2" />
+        </Grid>
+    </Grid>
+</Page>

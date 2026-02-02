@@ -1,4 +1,4 @@
-namespace MusicLibraryManager.Presentation;
+namespace MusicLibraryManager.ViewModels;
 
 public class ShellViewModel
 {
