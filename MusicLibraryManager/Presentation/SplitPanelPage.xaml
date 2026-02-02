@@ -23,13 +23,13 @@ d:DataContext="{d:DesignInstance Type=vm:SplitPanelViewModel}">
         <Grid Grid.Row="1"
               x:Name="SplitContainer">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="LeftColumn" Width="*" MinWidth="100" />
+                <ColumnDefinition x:Name="LeftColumn" Width="250" MinWidth="100" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition x:Name="RightColumn" Width="*" MinWidth="100" />
             </Grid.ColumnDefinitions>
 
             <!-- Left Panel -->
-            <views:LeftPanel Grid.Column="0" />
+            <views:TrackInfoPanel Grid.Column="0" />
 
             <!-- Resizable Splitter / Grip -->
             <Border Grid.Column="1"
