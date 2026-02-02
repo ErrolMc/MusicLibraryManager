@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="MusicLibraryManager.Presentation.TrackListPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicLibraryManager.ViewModels"
+             xmlns:views="using:MusicLibraryManager.Presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:TrackListPanelViewModel}">
+
+    <Border Background="{ThemeResource SurfaceVariantBrush}"
+            CornerRadius="8"
+            Margin="4,8,8,8"
+            Translation="0,0,8">
+        <Border.Shadow>
+            <ThemeShadow />
+        </Border.Shadow>
+        <Grid Padding="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <TextBlock Grid.Row="0"
+                       Text="{Binding Title}"
+                       Style="{StaticResource TitleTextBlockStyle}"
+                       Margin="0,0,0,12" />
+
+            <!-- Track List -->
+            <ListView Grid.Row="1"
+                      ItemsSource="{Binding Tracks}"
+                      SelectionMode="None"
+                      IsItemClickEnabled="False"
+                      Background="Transparent">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="Margin" Value="0" />
+                        <Setter Property="MinHeight" Value="0" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListViewItem">
+                                    <ContentPresenter Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                      HorizontalAlignment="Stretch"
+                                                      Margin="0,2" />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:TrackListItemViewModel">
+                        <views:TrackListItem DataContext="{Binding}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </Border>
+</UserControl>

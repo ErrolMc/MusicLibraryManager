@@ -52,7 +52,7 @@ d:DataContext="{d:DesignInstance Type=vm:SplitPanelViewModel}">
             </Border>
 
             <!-- Right Panel -->
-            <views:RightPanel Grid.Column="2" />
+            <views:TrackListPanel Grid.Column="2" />
         </Grid>
     </Grid>
 </Page>
