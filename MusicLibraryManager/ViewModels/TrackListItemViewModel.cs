@@ -35,17 +35,24 @@ public partial class TrackListItemViewModel : ObservableObject
         var fullFileName = Path.GetFileName(track.FilePath);
         FileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullFileName);
         _fileExtension = Path.GetExtension(fullFileName);
-        
-        SongName = track.Title;
-        Artist = track.Artist;
-        AlbumTitle = track.Album;
-        Year = track.Year ?? 0;
 
         _track = track;
         _onClickAction = onClickAction;
         Parent = parent;
 
+        PopulateInfo();
+
         ClickCommand = new RelayCommand(OnClick);
+    }
+
+    public void PopulateInfo()
+    {
+        if (_track == null) return;
+
+        SongName = _track.Title;
+        Artist = _track.Artist;
+        AlbumTitle = _track.Album;
+        Year = _track.Year ?? 0;
     }
 
     private void OnClick()

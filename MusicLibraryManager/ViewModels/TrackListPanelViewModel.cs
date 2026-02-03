@@ -1,7 +1,4 @@
 using System.Collections.ObjectModel;
-using Microsoft.UI.Xaml;
-using MusicLibraryManager.Models;
-using MusicLibraryManager.Services;
 
 namespace MusicLibraryManager.ViewModels;
 
@@ -26,13 +23,14 @@ public partial class TrackListPanelViewModel : ObservableObject
     private GridLength yearColumnWidth = new(60);
 
     private readonly IMusicLibraryService _musicLibraryService;
-    private readonly TrackInfoPanelViewModel _trackInfoPanelViewModel;
+    private readonly TrackInfoPanelViewModel _trackInfoPanel;
     private readonly IOverlayService _overlayService;
+    private TrackListItemViewModel? _selectedTrackItem;
 
     public TrackListPanelViewModel(IMusicLibraryService musicLibraryService, TrackInfoPanelViewModel trackInfoPanelViewModel, IOverlayService overlayService)
     {
         _musicLibraryService = musicLibraryService;
-        _trackInfoPanelViewModel = trackInfoPanelViewModel;
+        _trackInfoPanel = trackInfoPanelViewModel;
         _overlayService = overlayService;
     }
 
@@ -50,11 +48,33 @@ public partial class TrackListPanelViewModel : ObservableObject
         }
     }
 
-    private void OnSelectTrack(TrackListItemViewModel trackListItem)
+    private async void OnSelectTrack(TrackListItemViewModel trackListItem)
     {
         Track? track = trackListItem.Track;
         if (track == null)
             return;
-        _trackInfoPanelViewModel.SetInfoFromSong(track);
+
+        // Check for unsaved changes
+        if (_trackInfoPanel.HasChanges)
+        {
+            bool result = await _overlayService.ShowConfirmationAsync(
+                "Unsaved Changes",
+                "You have unsaved changes. Do you want to save them before switching tracks?",
+                "Save",
+                "Discard"
+            );
+
+            if (result)
+            {
+                await _trackInfoPanel.SaveChangesAsync();
+            }
+            else
+            {
+                _trackInfoPanel.CancelChanges();
+            }
+        }
+
+        _trackInfoPanel.SetInfoFromSong(track, trackListItem.PopulateInfo);
+        _selectedTrackItem = trackListItem;
     }
 }

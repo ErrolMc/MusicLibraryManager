@@ -39,6 +39,7 @@ public class Track
         get => Tag.Track > 0 ? (int?)Tag.Track : null;
     }
 
+    public TagLib.File GetTagFile() => _file;
     public TagLib.Tag Tag => _file.Tag;
     public string FilePath { get; set; }
 

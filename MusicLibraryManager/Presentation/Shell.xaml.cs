@@ -22,6 +22,7 @@ public sealed partial class Shell : UserControl, IContentControlProvider
         if (OverlayService.Instance is not null)
         {
             OverlayService.Instance.Initialize(LoadingOverlay, LoadingMessage);
+            OverlayService.Instance.InitializePopup(PopupOverlay, PopupTitle, PopupMessage, PopupConfirmButton, PopupCancelButton);
         }
         else
         {

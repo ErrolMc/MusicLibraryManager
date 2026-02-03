@@ -15,19 +15,20 @@
             <ThemeShadow />
         </Border.Shadow>
         <Grid Padding="12">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0"
-                       Text="Track Info"
-                       Style="{StaticResource SubtitleTextBlockStyle}"
-                       Margin="0,0,0,8" />
+        <TextBlock Grid.Row="0"
+                   Text="Track Info"
+                   Style="{StaticResource SubtitleTextBlockStyle}"
+                   Margin="0,0,0,8" />
 
-            <ScrollViewer Grid.Row="1"
-                      VerticalScrollBarVisibility="Auto"
-                      HorizontalScrollBarVisibility="Disabled">
+        <ScrollViewer Grid.Row="1"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
             <StackPanel Spacing="6"
                         HorizontalAlignment="Stretch"
                         Padding="0,0,20,0">
@@ -186,14 +187,29 @@
                                           HorizontalAlignment="Center"
                                           VerticalAlignment="Center" />
                                 <Image Source="{Binding AlbumCover}"
-                                Stretch="UniformToFill"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center" />
-                            </Grid>
-                        </Border>
-                    </StackPanel>
-                </StackPanel>
-            </ScrollViewer>
-        </Grid>
-    </Border>
-</UserControl>
+                                                                Stretch="UniformToFill"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center" />
+                                                            </Grid>
+                                                        </Border>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </ScrollViewer>
+
+                                            <!-- Save/Cancel Buttons -->
+                                            <StackPanel Grid.Row="2"
+                                                        Orientation="Horizontal"
+                                                        HorizontalAlignment="Right"
+                                                        Spacing="8"
+                                                        Margin="0,12,15,0"
+                                                        Visibility="{Binding HasChanges}">
+                                                <Button Content="Cancel"
+                                                        Click="CancelButton_Click"
+                                                        Style="{StaticResource OutlinedButtonStyle}" />
+                                                <Button Content="Save"
+                                                        Click="SaveButton_Click"
+                                                        Style="{StaticResource FilledButtonStyle}" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </UserControl>
