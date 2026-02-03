@@ -82,6 +82,7 @@ public partial class App : Application
                 {
                     services.AddSingleton<IMusicLibraryService, MusicLibraryService>();
                     services.AddSingleton<IOverlayService, OverlayService>();
+                    services.AddSingleton<IImageService, ImageService>();
                     services.AddSingleton<TrackListPanelViewModel>();
                     services.AddSingleton<MenuBarViewModel>();
                     services.AddSingleton<TrackInfoPanelViewModel>();

@@ -1,11 +1,14 @@
+using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml.Media.Imaging;
 using MusicLibraryManager.Services;
+using Windows.Storage.Pickers;
 
 namespace MusicLibraryManager.ViewModels;
 
 public partial class TrackInfoPanelViewModel : ObservableObject
 {
     private readonly IMusicLibraryService _musicLibraryService;
+    private readonly IImageService _imageService;
     private Track? _currentTrack;
     private Action? _refreshTrackItemCallback;
 
@@ -20,6 +23,11 @@ public partial class TrackInfoPanelViewModel : ObservableObject
     private string? _originalComment;
     private string? _originalYear;
     private string? _originalTrack;
+
+    // Album cover change tracking
+    private byte[]? _newAlbumCoverData;
+    private string? _newAlbumCoverMimeType;
+    private bool _albumCoverChanged;
 
     [ObservableProperty]
     private string? fileNameWithoutExtension;
@@ -65,9 +73,10 @@ public partial class TrackInfoPanelViewModel : ObservableObject
     [ObservableProperty]
     private bool hasTrackLoaded;
 
-    public TrackInfoPanelViewModel(IMusicLibraryService musicLibraryService)
+    public TrackInfoPanelViewModel(IMusicLibraryService musicLibraryService, IImageService imageService)
     {
         _musicLibraryService = musicLibraryService;
+        _imageService = imageService;
     }
 
     partial void OnFileNameWithoutExtensionChanged(string? value) => UpdateHasChanges();
@@ -90,16 +99,17 @@ public partial class TrackInfoPanelViewModel : ObservableObject
         }
 
         HasChanges = 
-            FileNameWithoutExtension != _originalFileNameWithoutExtension ||
-            Title != _originalTitle ||
-            Artist != _originalArtist ||
-            Album != _originalAlbum ||
-            AlbumArtist != _originalAlbumArtist ||
-            Composer != _originalComposer ||
-            Genre != _originalGenre ||
-            Comment != _originalComment ||
-            Year != _originalYear ||
-            Track != _originalTrack;
+        _albumCoverChanged ||
+        FileNameWithoutExtension != _originalFileNameWithoutExtension ||
+        Title != _originalTitle ||
+        Artist != _originalArtist ||
+        Album != _originalAlbum ||
+        AlbumArtist != _originalAlbumArtist ||
+        Composer != _originalComposer ||
+        Genre != _originalGenre ||
+        Comment != _originalComment ||
+        Year != _originalYear ||
+        Track != _originalTrack;
     }
 
     public void SetInfoFromSong(Track track, System.Action refreshTrackItemCallback)
@@ -135,6 +145,11 @@ public partial class TrackInfoPanelViewModel : ObservableObject
         Track = _originalTrack;
         AlbumCover = GetAlbumCover(track);
 
+        // Reset album cover change tracking
+        _newAlbumCoverData = null;
+        _newAlbumCoverMimeType = null;
+        _albumCoverChanged = false;
+
         HasTrackLoaded = true;
         HasChanges = false;
     }
@@ -153,6 +168,12 @@ public partial class TrackInfoPanelViewModel : ObservableObject
         Composer = _originalComposer;
         AlbumArtist = _originalAlbumArtist;
         Track = _originalTrack;
+
+        // Reset album cover changes
+        AlbumCover = GetAlbumCover(_currentTrack);
+        _newAlbumCoverData = null;
+        _newAlbumCoverMimeType = null;
+        _albumCoverChanged = false;
 
         HasChanges = false;
     }
@@ -174,7 +195,9 @@ public partial class TrackInfoPanelViewModel : ObservableObject
             Genre: Genre != _originalGenre ? Genre : null,
             Comment: Comment != _originalComment ? Comment : null,
             Year: Year != _originalYear ? yearValue : null,
-            TrackNumber: Track != _originalTrack ? trackValue : null
+            TrackNumber: Track != _originalTrack ? trackValue : null,
+            AlbumCoverData: _albumCoverChanged ? _newAlbumCoverData : null,
+            AlbumCoverMimeType: _albumCoverChanged ? _newAlbumCoverMimeType : null
         );
 
         var success = await _musicLibraryService.UpdateTrackAsync(_currentTrack, updateInfo);
@@ -192,6 +215,11 @@ public partial class TrackInfoPanelViewModel : ObservableObject
             _originalComment = Comment;
             _originalYear = Year;
             _originalTrack = Track;
+
+            // Reset album cover change tracking
+            _newAlbumCoverData = null;
+            _newAlbumCoverMimeType = null;
+            _albumCoverChanged = false;
 
             HasChanges = false;
             _refreshTrackItemCallback?.Invoke();
@@ -213,5 +241,64 @@ public partial class TrackInfoPanelViewModel : ObservableObject
         using var stream = new MemoryStream(imageData);
         bitmap.SetSource(stream.AsRandomAccessStream());
         return bitmap;
+    }
+
+    [RelayCommand]
+    private async Task ChangeAlbumCoverAsync()
+    {
+        if (_currentTrack == null) return;
+
+        var picker = new FileOpenPicker();
+        picker.FileTypeFilter.Add(".jpg");
+        picker.FileTypeFilter.Add(".jpeg");
+        picker.FileTypeFilter.Add(".png");
+        picker.FileTypeFilter.Add(".bmp");
+
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.Instance.MainWindow);
+        WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+
+        var file = await picker.PickSingleFileAsync();
+        if (file == null) return;
+
+        using var stream = await file.OpenStreamForReadAsync();
+        using var memoryStream = new MemoryStream();
+        await stream.CopyToAsync(memoryStream);
+        var bytes = memoryStream.ToArray();
+
+        _newAlbumCoverData = bytes;
+        _newAlbumCoverMimeType = file.ContentType;
+        _albumCoverChanged = true;
+
+        // Update the displayed album cover
+        var bitmap = new BitmapImage();
+        using var imageStream = new MemoryStream(bytes);
+        bitmap.SetSource(imageStream.AsRandomAccessStream());
+        AlbumCover = bitmap;
+
+        UpdateHasChanges();
+    }
+
+    [RelayCommand]
+    private void CopyAlbumCover()
+    {
+        if (_currentTrack == null) return;
+
+        byte[]? imageData = _albumCoverChanged ? _newAlbumCoverData : _imageService.GetAlbumCoverData(_currentTrack);
+        if (imageData == null) return;
+
+        _imageService.CopyToClipboard(imageData);
+    }
+
+    [RelayCommand]
+    private void RemoveAlbumCover()
+    {
+        if (_currentTrack == null) return;
+
+        _newAlbumCoverData = null;
+        _newAlbumCoverMimeType = null;
+        _albumCoverChanged = true;
+        AlbumCover = null;
+
+        UpdateHasChanges();
     }
 }

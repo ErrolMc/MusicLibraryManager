@@ -18,5 +18,7 @@ public record TrackUpdateInfo(
     string? Genre,
     string? Comment,
     uint? Year,
-    uint? TrackNumber
+    uint? TrackNumber,
+    byte[]? AlbumCoverData = null,
+    string? AlbumCoverMimeType = null
 );

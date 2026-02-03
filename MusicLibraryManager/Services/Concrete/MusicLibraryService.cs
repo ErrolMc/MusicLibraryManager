@@ -80,6 +80,21 @@ public class MusicLibraryService : IMusicLibraryService
                 if (updateInfo.TrackNumber.HasValue)
                     tagFile.Tag.Track = updateInfo.TrackNumber.Value;
 
+                if (updateInfo.AlbumCoverData is not null)
+                {
+                    var picture = new TagLib.Picture
+                    {
+                        Type = TagLib.PictureType.FrontCover,
+                        MimeType = updateInfo.AlbumCoverMimeType ?? "image/jpeg",
+                        Data = new TagLib.ByteVector(updateInfo.AlbumCoverData)
+                    };
+                    tagFile.Tag.Pictures = [picture];
+                }
+                else if (tagFile.Tag.Pictures.Length > 0)
+                {
+                    tagFile.Tag.Pictures = [];
+                }
+
                 tagFile.Save();
 
                 // Handle file rename if needed

@@ -173,26 +173,68 @@
                         <TextBlock Text="Album Art"
                                    Style="{StaticResource CaptionTextBlockStyle}"
                                    Opacity="0.7" />
+                        <Button Command="{Binding ChangeAlbumCoverCommand}"
+                            Padding="0"
+                            BorderThickness="0"
+                            Background="Transparent"
+                            HorizontalAlignment="Left">
+                        <Button.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Text="Copy"
+                                                Command="{Binding CopyAlbumCoverCommand}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Change"
+                                                Command="{Binding ChangeAlbumCoverCommand}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE70F;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Remove"
+                                                Command="{Binding RemoveAlbumCoverCommand}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE74D;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </Button.ContextFlyout>
                         <Border Background="{ThemeResource SurfaceBrush}"
-                                CornerRadius="4"
-                                Width="120"
-                                Height="120"
-                                HorizontalAlignment="Left"
-                                BorderBrush="{ThemeResource OutlineBrush}"
-                                BorderThickness="1">
-                            <Grid>
-                                <FontIcon Glyph="&#xE8B9;"
-                                          FontSize="32"
-                                          Opacity="0.3"
-                                          HorizontalAlignment="Center"
-                                          VerticalAlignment="Center" />
-                                <Image Source="{Binding AlbumCover}"
-                                                                Stretch="UniformToFill"
-                                                                HorizontalAlignment="Center"
-                                                                VerticalAlignment="Center" />
-                                                            </Grid>
-                                                        </Border>
-                                                    </StackPanel>
+                                    CornerRadius="4"
+                                    Width="120"
+                                    Height="120"
+                                    BorderBrush="{ThemeResource OutlineBrush}"
+                                    BorderThickness="1">
+                                <Grid>
+                                    <FontIcon Glyph="&#xE8B9;"
+                                              FontSize="32"
+                                              Opacity="0.3"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                                    <Image Source="{Binding AlbumCover}"
+                                           Stretch="UniformToFill"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+                                    <Border Background="#80000000"
+                                            CornerRadius="4"
+                                            Opacity="0"
+                                            x:Name="AlbumCoverOverlay">
+                                        <StackPanel HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center">
+                                            <FontIcon Glyph="&#xE70F;"
+                                                      FontSize="20"
+                                                      Foreground="White" />
+                                            <TextBlock Text="Change"
+                                                       Foreground="White"
+                                                       FontSize="10"
+                                                       Margin="0,4,0,0" />
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </Button>
+                    </StackPanel>
                                                 </StackPanel>
                                             </ScrollViewer>
 
