@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using Microsoft.UI.Xaml;
 using MusicLibraryManager.Models;
 using MusicLibraryManager.Services;
 
@@ -11,6 +12,15 @@ public partial class TrackListPanelViewModel : ObservableObject
 
     [ObservableProperty]
     private ObservableCollection<TrackListItemViewModel> tracks = new();
+
+    [ObservableProperty]
+    private string? folderPath;
+
+    [ObservableProperty]
+    private GridLength artistColumnWidth = new(200);
+
+    [ObservableProperty]
+    private GridLength yearColumnWidth = new(60);
 
     private readonly IMusicLibraryService _musicLibraryService;
     private readonly TrackInfoPanelViewModel _trackInfoPanelViewModel;
@@ -29,10 +39,11 @@ public partial class TrackListPanelViewModel : ObservableObject
         IReadOnlyList<Track> tracks = await _musicLibraryService.GetSongsFromFolderAsync(folderPath);
         _overlayService.Hide();
 
+        FolderPath = folderPath;
         Tracks.Clear();
         foreach (Track track in tracks)
         {
-            Tracks.Add(new TrackListItemViewModel(track, OnSelectTrack));
+            Tracks.Add(new TrackListItemViewModel(track, OnSelectTrack, this));
         }
     }
 

@@ -18,7 +18,9 @@
         <Grid Padding="16">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <!-- Header -->
@@ -27,8 +29,77 @@
                        Style="{StaticResource TitleTextBlockStyle}"
                        Margin="0,0,0,12" />
 
+            <!-- Column Headers -->
+            <Border Grid.Row="1"
+                    Background="{ThemeResource SurfaceBrush}"
+                    Padding="12,8"
+                    CornerRadius="4"
+                    Margin="0,0,0,4">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" MinWidth="80" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="{Binding ArtistColumnWidth, Mode=TwoWay}" MinWidth="80" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="{Binding YearColumnWidth, Mode=TwoWay}" MinWidth="50" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                               Text="Title"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               FontWeight="SemiBold"
+                               Opacity="0.7" />
+
+                    <Border Grid.Column="1"
+                            x:Name="ArtistSplitter"
+                            Width="8"
+                            Background="Transparent"
+                            Margin="4,0"
+                            ManipulationMode="TranslateX"
+                            ManipulationStarted="Splitter_ManipulationStarted"
+                            ManipulationDelta="ArtistSplitter_ManipulationDelta"
+                            ManipulationCompleted="Splitter_ManipulationCompleted"
+                            PointerEntered="Splitter_PointerEntered"
+                            PointerExited="Splitter_PointerExited">
+                        <Rectangle Width="2"
+                                   Fill="{ThemeResource OutlineBrush}"
+                                   Opacity="0.3"
+                                   HorizontalAlignment="Center" />
+                    </Border>
+
+                    <TextBlock Grid.Column="2"
+                               Text="Artist"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               FontWeight="SemiBold"
+                               Opacity="0.7" />
+
+                    <Border Grid.Column="3"
+                            x:Name="YearSplitter"
+                            Width="8"
+                            Background="Transparent"
+                            Margin="4,0"
+                            ManipulationMode="TranslateX"
+                            ManipulationStarted="Splitter_ManipulationStarted"
+                            ManipulationDelta="YearSplitter_ManipulationDelta"
+                            ManipulationCompleted="Splitter_ManipulationCompleted"
+                            PointerEntered="Splitter_PointerEntered"
+                            PointerExited="Splitter_PointerExited">
+                        <Rectangle Width="2"
+                                   Fill="{ThemeResource OutlineBrush}"
+                                   Opacity="0.3"
+                                   HorizontalAlignment="Center" />
+                    </Border>
+
+                    <TextBlock Grid.Column="4"
+                               Text="Year"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               FontWeight="SemiBold"
+                               Opacity="0.7" />
+                </Grid>
+            </Border>
+
             <!-- Track List -->
-            <ListView Grid.Row="1"
+            <ListView Grid.Row="2"
                       ItemsSource="{Binding Tracks}"
                       SelectionMode="None"
                       IsItemClickEnabled="False"
@@ -57,6 +128,13 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+
+            <!-- Folder Path -->
+            <TextBox Grid.Row="3"
+                     Text="{Binding FolderPath}"
+                     IsReadOnly="True"
+                     Margin="0,12,0,0"
+                     PlaceholderText="No folder selected" />
         </Grid>
     </Border>
 </UserControl>

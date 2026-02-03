@@ -18,10 +18,11 @@ public partial class TrackListItemViewModel : ObservableObject
     private readonly Track? _track;
 
     public Track? Track => _track;
+    public TrackListPanelViewModel Parent { get; }
 
     public ICommand ClickCommand { get; }
 
-    public TrackListItemViewModel(Track track, Action<TrackListItemViewModel> onClickAction)
+    public TrackListItemViewModel(Track track, Action<TrackListItemViewModel> onClickAction, TrackListPanelViewModel parent)
     {
         SongName = track.Title;
         Artist = track.Artist;
@@ -30,6 +31,7 @@ public partial class TrackListItemViewModel : ObservableObject
 
         _track = track;
         _onClickAction = onClickAction;
+        Parent = parent;
 
         ClickCommand = new RelayCommand(OnClick);
     }
