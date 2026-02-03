@@ -1,3 +1,5 @@
+using Microsoft.UI.Xaml.Media.Imaging;
+
 namespace MusicLibraryManager.ViewModels;
 
 public partial class TrackInfoPanelViewModel : ObservableObject
@@ -30,7 +32,7 @@ public partial class TrackInfoPanelViewModel : ObservableObject
     private string? track;
 
     [ObservableProperty]
-    private string? albumPhotoPath;
+    private BitmapImage? albumCover;
 
     public void SetInfoFromSong(Track track)
     {
@@ -43,5 +45,21 @@ public partial class TrackInfoPanelViewModel : ObservableObject
         Composer = "";
         AlbumArtist = "";
         Track = (track.TrackNumber ?? 0).ToString();
+        AlbumCover = GetAlbumCover(track);
+    }
+
+    private static BitmapImage? GetAlbumCover(Track track)
+    {
+        var pictures = track.Tag.Pictures;
+        if (pictures == null || pictures.Length == 0)
+            return null;
+
+        var picture = pictures[0];
+        var imageData = picture.Data.Data;
+
+        var bitmap = new BitmapImage();
+        using var stream = new MemoryStream(imageData);
+        bitmap.SetSource(stream.AsRandomAccessStream());
+        return bitmap;
     }
 }

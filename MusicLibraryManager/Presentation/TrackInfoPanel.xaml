@@ -157,10 +157,10 @@
                                           Opacity="0.3"
                                           HorizontalAlignment="Center"
                                           VerticalAlignment="Center" />
-                                <Image Source="{Binding AlbumPhotoPath}"
-                                       Stretch="UniformToFill"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center" />
+                                <Image Source="{Binding AlbumCover}"
+                                Stretch="UniformToFill"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
                             </Grid>
                         </Border>
                     </StackPanel>
