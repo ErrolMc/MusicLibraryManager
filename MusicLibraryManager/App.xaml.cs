@@ -81,6 +81,7 @@ public partial class App : Application
                 .ConfigureServices((context, services) =>
                 {
                     services.AddSingleton<IMusicLibraryService, MusicLibraryService>();
+                    services.AddSingleton<IOverlayService, OverlayService>();
                     services.AddSingleton<TrackListPanelViewModel>();
                     services.AddSingleton<MenuBarViewModel>();
                     services.AddSingleton<TrackInfoPanelViewModel>();

@@ -6,7 +6,10 @@ public partial class SplitPanelViewModel : ObservableObject
     public TrackListPanelViewModel TrackListPanelViewModel { get; }
     public TrackInfoPanelViewModel TrackInfoPanelViewModel { get; }
 
-    public SplitPanelViewModel(MenuBarViewModel menuBarViewModel, TrackListPanelViewModel trackListPanelViewModel, TrackInfoPanelViewModel trackInfoPanelViewModel)
+    public SplitPanelViewModel(
+        MenuBarViewModel menuBarViewModel, 
+        TrackListPanelViewModel trackListPanelViewModel, 
+        TrackInfoPanelViewModel trackInfoPanelViewModel)
     {
         MenuBarViewModel = menuBarViewModel;
         TrackListPanelViewModel = trackListPanelViewModel;

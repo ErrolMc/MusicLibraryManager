@@ -8,29 +8,49 @@
       mc:Ignorable="d"
       d:DesignHeight="300"
       d:DesignWidth="400">
-  <Border Background="{ThemeResource BackgroundBrush}">
-    <utu:ExtendedSplashScreen x:Name="Splash"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Stretch">
-      <utu:ExtendedSplashScreen.LoadingContentTemplate>
-        <DataTemplate>
-          <Grid>
-            <Grid.RowDefinitions>
-              <RowDefinition Height="2*" />
-              <RowDefinition />
-            </Grid.RowDefinitions>
+  <Grid>
+    <Border Background="{ThemeResource BackgroundBrush}">
+      <utu:ExtendedSplashScreen x:Name="Splash"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  HorizontalContentAlignment="Stretch"
+                  VerticalContentAlignment="Stretch">
+        <utu:ExtendedSplashScreen.LoadingContentTemplate>
+          <DataTemplate>
+            <Grid>
+              <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <RowDefinition />
+              </Grid.RowDefinitions>
 
-            <ProgressRing IsActive="True"
-                  Grid.Row="1"
+              <ProgressRing IsActive="True"
+                    Grid.Row="1"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Height="100"
+                    Width="100" />
+            </Grid>
+          </DataTemplate>
+        </utu:ExtendedSplashScreen.LoadingContentTemplate>
+      </utu:ExtendedSplashScreen>
+    </Border>
+
+    <!-- Loading Overlay -->
+    <Grid x:Name="LoadingOverlay"
+          Visibility="Collapsed"
+          Background="{ThemeResource BackgroundBrush}"
+          Opacity="0.85">
+      <StackPanel HorizontalAlignment="Center"
                   VerticalAlignment="Center"
-                  HorizontalAlignment="Center"
-                  Height="100"
-                  Width="100" />
-          </Grid>
-        </DataTemplate>
-      </utu:ExtendedSplashScreen.LoadingContentTemplate>
-    </utu:ExtendedSplashScreen>
-  </Border>
+                  Spacing="16">
+        <ProgressRing IsActive="True"
+                      Width="64"
+                      Height="64" />
+        <TextBlock x:Name="LoadingMessage"
+                   Style="{StaticResource BodyTextBlockStyle}"
+                   HorizontalAlignment="Center"
+                   Visibility="Collapsed" />
+      </StackPanel>
+    </Grid>
+  </Grid>
 </UserControl>

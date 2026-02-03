@@ -14,16 +14,20 @@ public partial class TrackListPanelViewModel : ObservableObject
 
     private readonly IMusicLibraryService _musicLibraryService;
     private readonly TrackInfoPanelViewModel _trackInfoPanelViewModel;
+    private readonly IOverlayService _overlayService;
 
-    public TrackListPanelViewModel(IMusicLibraryService musicLibraryService, TrackInfoPanelViewModel trackInfoPanelViewModel)
+    public TrackListPanelViewModel(IMusicLibraryService musicLibraryService, TrackInfoPanelViewModel trackInfoPanelViewModel, IOverlayService overlayService)
     {
         _musicLibraryService = musicLibraryService;
         _trackInfoPanelViewModel = trackInfoPanelViewModel;
+        _overlayService = overlayService;
     }
 
     public async Task LoadSongsFromFolderAsync(string folderPath)
     {
+        _overlayService.Show("Loading tracks...");
         IReadOnlyList<Track> tracks = await _musicLibraryService.GetSongsFromFolderAsync(folderPath);
+        _overlayService.Hide();
 
         Tracks.Clear();
         foreach (Track track in tracks)
