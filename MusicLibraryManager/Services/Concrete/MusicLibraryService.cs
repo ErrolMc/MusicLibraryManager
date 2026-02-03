@@ -44,19 +44,8 @@ public class MusicLibraryService : IMusicLibraryService
         try
         {
             using var tagFile = TagLib.File.Create(filePath);
-            TagLib.Tag tag = tagFile.Tag;
 
-            return new Track
-            {
-                FilePath = filePath,
-                Title = string.IsNullOrWhiteSpace(tag.Title) ? fileName : tag.Title,
-                Artist = tag.FirstPerformer ?? string.Empty,
-                Album = tag.Album ?? string.Empty,
-                Genre = tag.FirstGenre ?? string.Empty,
-                Year = tag.Year > 0 ? (int)tag.Year : null,
-                TrackNumber = tag.Track > 0 ? (int)tag.Track : null,
-                Duration = tagFile.Properties.Duration
-            };
+            return new Track(tagFile, filePath);
         }
         catch
         {
