@@ -37,6 +37,8 @@
                     Margin="0,0,0,4">
                 <Grid>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{Binding FileNameColumnWidth, Mode=TwoWay}" MinWidth="80" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" MinWidth="80" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="{Binding ArtistColumnWidth, Mode=TwoWay}" MinWidth="80" />
@@ -45,12 +47,35 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0"
-                               Text="Title"
+                               Text="Filename"
                                Style="{StaticResource CaptionTextBlockStyle}"
                                FontWeight="SemiBold"
                                Opacity="0.7" />
 
                     <Border Grid.Column="1"
+                            x:Name="FileNameSplitter"
+                            Width="8"
+                            Background="Transparent"
+                            Margin="4,0"
+                            ManipulationMode="TranslateX"
+                            ManipulationStarted="Splitter_ManipulationStarted"
+                            ManipulationDelta="FileNameSplitter_ManipulationDelta"
+                            ManipulationCompleted="Splitter_ManipulationCompleted"
+                            PointerEntered="Splitter_PointerEntered"
+                            PointerExited="Splitter_PointerExited">
+                        <Rectangle Width="2"
+                                   Fill="{ThemeResource OutlineBrush}"
+                                   Opacity="0.3"
+                                   HorizontalAlignment="Center" />
+                    </Border>
+
+                    <TextBlock Grid.Column="2"
+                               Text="Title"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               FontWeight="SemiBold"
+                               Opacity="0.7" />
+
+                    <Border Grid.Column="3"
                             x:Name="ArtistSplitter"
                             Width="8"
                             Background="Transparent"
@@ -67,13 +92,13 @@
                                    HorizontalAlignment="Center" />
                     </Border>
 
-                    <TextBlock Grid.Column="2"
+                    <TextBlock Grid.Column="4"
                                Text="Artist"
                                Style="{StaticResource CaptionTextBlockStyle}"
                                FontWeight="SemiBold"
                                Opacity="0.7" />
 
-                    <Border Grid.Column="3"
+                    <Border Grid.Column="5"
                             x:Name="YearSplitter"
                             Width="8"
                             Background="Transparent"
@@ -90,7 +115,7 @@
                                    HorizontalAlignment="Center" />
                     </Border>
 
-                    <TextBlock Grid.Column="4"
+                    <TextBlock Grid.Column="6"
                                Text="Year"
                                Style="{StaticResource CaptionTextBlockStyle}"
                                FontWeight="SemiBold"

@@ -3,6 +3,14 @@ namespace MusicLibraryManager.ViewModels;
 public partial class TrackListItemViewModel : ObservableObject
 {
     [ObservableProperty]
+    private string fileNameWithoutExtension = string.Empty;
+
+    private string _fileExtension = string.Empty;
+    public string FileExtension => _fileExtension;
+
+    public string FullFileName => FileNameWithoutExtension + FileExtension;
+
+    [ObservableProperty]
     private string songName = string.Empty;
 
     [ObservableProperty]
@@ -24,6 +32,10 @@ public partial class TrackListItemViewModel : ObservableObject
 
     public TrackListItemViewModel(Track track, Action<TrackListItemViewModel> onClickAction, TrackListPanelViewModel parent)
     {
+        var fullFileName = Path.GetFileName(track.FilePath);
+        FileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullFileName);
+        _fileExtension = Path.GetExtension(fullFileName);
+        
         SongName = track.Title;
         Artist = track.Artist;
         AlbumTitle = track.Album;

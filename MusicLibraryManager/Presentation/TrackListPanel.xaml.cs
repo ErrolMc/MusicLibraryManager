@@ -11,6 +11,7 @@ public sealed partial class TrackListPanel : UserControl
     private bool _isDragging;
     private bool _isHovering;
 
+    private const double MinFileNameWidth = 80;
     private const double MinTitleWidth = 80;
     private const double MinArtistWidth = 80;
     private const double MinYearWidth = 50;
@@ -26,14 +27,27 @@ public sealed partial class TrackListPanel : UserControl
 
     private double AvailableWidth => ActualWidth - Padding;
 
+    private void FileNameSplitter_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+    {
+        if (ViewModel == null) return;
+
+        var newWidth = ViewModel.FileNameColumnWidth.Value + e.Delta.Translation.X;
+
+        // Calculate max width: available space minus title min, artist, year columns, and splitters
+        var maxWidth = AvailableWidth - MinTitleWidth - ViewModel.ArtistColumnWidth.Value - ViewModel.YearColumnWidth.Value - (SplitterWidth * 3);
+        newWidth = Math.Clamp(newWidth, MinFileNameWidth, Math.Max(MinFileNameWidth, maxWidth));
+
+        ViewModel.FileNameColumnWidth = new GridLength(newWidth);
+    }
+
     private void ArtistSplitter_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
     {
         if (ViewModel == null) return;
 
         var newWidth = ViewModel.ArtistColumnWidth.Value - e.Delta.Translation.X;
         
-        // Calculate max width: available space minus title min, year column, and splitters
-        var maxWidth = AvailableWidth - MinTitleWidth - ViewModel.YearColumnWidth.Value - (SplitterWidth * 2);
+        // Calculate max width: available space minus filename, title min, year column, and splitters
+        var maxWidth = AvailableWidth - ViewModel.FileNameColumnWidth.Value - MinTitleWidth - ViewModel.YearColumnWidth.Value - (SplitterWidth * 3);
         newWidth = Math.Clamp(newWidth, MinArtistWidth, Math.Max(MinArtistWidth, maxWidth));
         
         ViewModel.ArtistColumnWidth = new GridLength(newWidth);
@@ -45,8 +59,8 @@ public sealed partial class TrackListPanel : UserControl
 
         var newWidth = ViewModel.YearColumnWidth.Value - e.Delta.Translation.X;
         
-        // Calculate max width: available space minus title min, artist column, and splitters
-        var maxWidth = AvailableWidth - MinTitleWidth - ViewModel.ArtistColumnWidth.Value - (SplitterWidth * 2);
+        // Calculate max width: available space minus filename, title min, artist column, and splitters
+        var maxWidth = AvailableWidth - ViewModel.FileNameColumnWidth.Value - MinTitleWidth - ViewModel.ArtistColumnWidth.Value - (SplitterWidth * 3);
         newWidth = Math.Clamp(newWidth, MinYearWidth, Math.Max(MinYearWidth, maxWidth));
         
         ViewModel.YearColumnWidth = new GridLength(newWidth);

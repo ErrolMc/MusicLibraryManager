@@ -26,117 +26,145 @@
                        Margin="0,0,0,8" />
 
             <ScrollViewer Grid.Row="1"
-                          VerticalScrollBarVisibility="Auto"
-                          HorizontalScrollBarVisibility="Disabled">
-                <StackPanel Spacing="6"
-                            HorizontalAlignment="Left">
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Spacing="6"
+                        HorizontalAlignment="Stretch"
+                        Padding="0,0,20,0">
+
+                <!-- Filename -->
+                <StackPanel Spacing="2">
+                    <TextBlock Text="Filename"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               Opacity="0.7" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0"
+                                 Text="{Binding FileNameWithoutExtension, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 PlaceholderText="Filename"
+                                 MinHeight="24"
+                                 Padding="0" />
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding FileExtension}"
+                                   Style="{StaticResource BodyTextBlockStyle}"
+                                   Opacity="0.5"
+                                   VerticalAlignment="Center"
+                                   Margin="4,0,0,0" />
+                    </Grid>
+                </StackPanel>
                     
-                    <!-- Title -->
+                <!-- Title -->
+                <StackPanel Spacing="2">
+                    <TextBlock Text="Title"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               Opacity="0.7" />
+                    <TextBox Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             PlaceholderText="Title"
+                             HorizontalAlignment="Stretch"
+                             MinHeight="24"
+                             Padding="0" />
+                </StackPanel>
+
+                <!-- Artist -->
+                <StackPanel Spacing="2">
+                    <TextBlock Text="Artist"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               Opacity="0.7" />
+                    <TextBox Text="{Binding Artist, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             PlaceholderText="Artist"
+                             HorizontalAlignment="Stretch"
+                             MinHeight="24"
+                             Padding="0" />
+                </StackPanel>
+
+                <!-- Album -->
+                <StackPanel Spacing="2">
+                    <TextBlock Text="Album"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               Opacity="0.7" />
+                    <TextBox Text="{Binding Album, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             PlaceholderText="Album"
+                             HorizontalAlignment="Stretch"
+                             MinHeight="24"
+                             Padding="0" />
+                </StackPanel>
+
+                <!-- Album Artist -->
+                <StackPanel Spacing="2">
+                    <TextBlock Text="Album Artist"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               Opacity="0.7" />
+                    <TextBox Text="{Binding AlbumArtist, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             PlaceholderText="Album Artist"
+                             HorizontalAlignment="Stretch"
+                             MinHeight="24"
+                             Padding="0" />
+                </StackPanel>
+
+                <!-- Composer -->
+                <StackPanel Spacing="2">
+                    <TextBlock Text="Composer"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               Opacity="0.7" />
+                    <TextBox Text="{Binding Composer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             PlaceholderText="Composer"
+                             HorizontalAlignment="Stretch"
+                             MinHeight="24"
+                             Padding="0" />
+                </StackPanel>
+
+                <!-- Genre -->
+                <StackPanel Spacing="2">
+                    <TextBlock Text="Genre"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               Opacity="0.7" />
+                    <TextBox Text="{Binding Genre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             PlaceholderText="Genre"
+                             HorizontalAlignment="Stretch"
+                             MinHeight="24"
+                             Padding="0" />
+                </StackPanel>
+
+                <!-- Track / Year Row -->
+                <StackPanel Orientation="Horizontal" Spacing="8">
                     <StackPanel Spacing="2">
-                        <TextBlock Text="Title"
+                        <TextBlock Text="Track"
                                    Style="{StaticResource CaptionTextBlockStyle}"
                                    Opacity="0.7" />
-                        <TextBox MinWidth="200" Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        PlaceholderText="Title"
-                        MinHeight="24"
-                        Padding="0" />
+                        <TextBox Text="{Binding Track, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 PlaceholderText="#"
+                                 Width="50"
+                                 MinHeight="24"
+                                 Padding="0" />
                     </StackPanel>
-
-                    <!-- Artist -->
                     <StackPanel Spacing="2">
-                        <TextBlock Text="Artist"
+                        <TextBlock Text="Year"
                                    Style="{StaticResource CaptionTextBlockStyle}"
                                    Opacity="0.7" />
-                        <TextBox Text="{Binding Artist, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        PlaceholderText="Artist"
-                        MinWidth="200"
-                        MinHeight="24"
-                        Padding="0" />
+                        <TextBox Text="{Binding Year, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 PlaceholderText="Year"
+                                 Width="60"
+                                 MinHeight="24"
+                                 Padding="0" />
                     </StackPanel>
+                </StackPanel>
 
-                    <!-- Album -->
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="Album"
-                                   Style="{StaticResource CaptionTextBlockStyle}"
-                                   Opacity="0.7" />
-                        <TextBox Text="{Binding Album, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        PlaceholderText="Album"
-                        MinWidth="200"
-                        MinHeight="24"
-                        Padding="0" />
-                    </StackPanel>
-
-                    <!-- Album Artist -->
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="Album Artist"
-                                   Style="{StaticResource CaptionTextBlockStyle}"
-                                   Opacity="0.7" />
-                        <TextBox Text="{Binding AlbumArtist, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        PlaceholderText="Album Artist"
-                        MinWidth="200"
-                        MinHeight="24"
-                        Padding="0" />
-                    </StackPanel>
-
-                    <!-- Composer -->
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="Composer"
-                                   Style="{StaticResource CaptionTextBlockStyle}"
-                                   Opacity="0.7" />
-                        <TextBox Text="{Binding Composer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        PlaceholderText="Composer"
-                        MinWidth="200"
-                        MinHeight="24"
-                        Padding="0" />
-                    </StackPanel>
-
-                    <!-- Track / Year / Genre Row -->
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <StackPanel Spacing="2">
-                            <TextBlock Text="Track"
-                                       Style="{StaticResource CaptionTextBlockStyle}"
-                                       Opacity="0.7" />
-                            <TextBox Text="{Binding Track, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            PlaceholderText="#"
-                            Width="50"
-                            MinHeight="24"
-                            Padding="0" />
-                        </StackPanel>
-                        <StackPanel Spacing="2">
-                            <TextBlock Text="Year"
-                                       Style="{StaticResource CaptionTextBlockStyle}"
-                                       Opacity="0.7" />
-                            <TextBox Text="{Binding Year, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            PlaceholderText="Year"
-                            Width="60"
-                            MinHeight="24"
-                            Padding="0" />
-                        </StackPanel>
-                        <StackPanel Spacing="2">
-                            <TextBlock Text="Genre"
-                                       Style="{StaticResource CaptionTextBlockStyle}"
-                                       Opacity="0.7" />
-                            <TextBox Text="{Binding Genre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            PlaceholderText="Genre"
-                            Width="74"
-                            MinHeight="24"
-                            Padding="0" />
-                        </StackPanel>
-                    </StackPanel>
-
-                    <!-- Comment -->
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="Comment"
-                                   Style="{StaticResource CaptionTextBlockStyle}"
-                                   Opacity="0.7" />
-                        <TextBox Text="{Binding Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        PlaceholderText="Comment"
-                        MinWidth="200"
-                        TextWrapping="Wrap"
-                        AcceptsReturn="True"
-                        MinHeight="24"
-                        Padding="0" />
-                    </StackPanel>
+                <!-- Comment -->
+                <StackPanel Spacing="2">
+                    <TextBlock Text="Comment"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               Opacity="0.7" />
+                    <TextBox Text="{Binding Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             PlaceholderText="Comment"
+                             HorizontalAlignment="Stretch"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             MinHeight="24"
+                             Padding="0" />
+                </StackPanel>
 
                     <!-- Album Photo -->
                     <StackPanel Spacing="2"

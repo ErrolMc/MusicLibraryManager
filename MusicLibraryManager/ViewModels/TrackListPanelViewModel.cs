@@ -17,7 +17,10 @@ public partial class TrackListPanelViewModel : ObservableObject
     private string? folderPath;
 
     [ObservableProperty]
-    private GridLength artistColumnWidth = new(200);
+    private GridLength fileNameColumnWidth = new(150);
+
+    [ObservableProperty]
+    private GridLength artistColumnWidth = new(150);
 
     [ObservableProperty]
     private GridLength yearColumnWidth = new(60);
