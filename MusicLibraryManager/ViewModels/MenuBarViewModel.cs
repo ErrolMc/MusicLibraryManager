@@ -9,7 +9,7 @@ public partial class MenuBarViewModel : ObservableObject
     private readonly TrackListPanelViewModel _trackListPanelViewModel;
 
     [ObservableProperty]
-    private string title = "Split Panel View";
+    private string title = "Music Library Manager";
 
     public ICommand NewCommand { get; }
     public ICommand OpenCommand { get; }

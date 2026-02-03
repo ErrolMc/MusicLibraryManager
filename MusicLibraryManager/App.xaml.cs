@@ -95,7 +95,7 @@ public partial class App : Application
 #endif
         MainWindow.SetWindowIcon();
 
-        MainWindow.AppWindow.Resize(new Windows.Graphics.SizeInt32() { Height = 800, Width = 1200});
+        MainWindow.AppWindow.Resize(new Windows.Graphics.SizeInt32() { Height = 900, Width = 1300});
 
         Host = await builder.NavigateAsync<Shell>();
     }
