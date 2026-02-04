@@ -200,6 +200,10 @@ publish/
 # in these scripts will be unencrypted
 PublishScripts/
 
+# AppSettings
+appsettings.json
+appsettings.development.json
+
 # NuGet Packages
 *.nupkg
 # NuGet Symbol Packages

@@ -16,6 +16,15 @@ HorizontalContentAlignment="Stretch">
     PointerExited="ItemBorder_PointerExited"
     PointerPressed="ItemBorder_PointerPressed"
     PointerReleased="ItemBorder_PointerReleased">
+    <Border.ContextFlyout>
+        <MenuFlyout>
+            <MenuFlyoutItem Text="Copy File Name" Command="{Binding CopyFileNameCommand}" />
+            <MenuFlyoutItem Text="Copy Artist" Command="{Binding CopyArtistCommand}" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem Text="Copy (File Name + Artist)" Command="{Binding CopyFileNameAndArtistCommand}" />
+            <MenuFlyoutItem Text="Copy (Title + Artist)" Command="{Binding CopyTitleAndArtistCommand}" />
+        </MenuFlyout>
+    </Border.ContextFlyout>
     <Grid VerticalAlignment="Center">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="{Binding Parent.FileNameColumnWidth}" MinWidth="80" />

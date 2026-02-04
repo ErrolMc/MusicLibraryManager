@@ -1,4 +1,6 @@
 using System.Collections.ObjectModel;
+using Microsoft.UI.Xaml.Media.Imaging;
+using MusicLibraryManager.Services;
 
 namespace MusicLibraryManager.ViewModels.SoundCloud;
 
@@ -20,11 +22,15 @@ public partial class SoundCloudSearchListViewModel : ObservableObject
     private bool hasResults;
 
     private readonly SoundCloudTrackInfoPanelViewModel _trackInfoPanel;
+    private readonly ISoundCloudService _soundCloudService;
     private SoundCloudSearchItemViewModel? _selectedItem;
 
-    public SoundCloudSearchListViewModel(SoundCloudTrackInfoPanelViewModel trackInfoPanelViewModel)
+    public SoundCloudSearchListViewModel(
+        SoundCloudTrackInfoPanelViewModel trackInfoPanelViewModel,
+        ISoundCloudService soundCloudService)
     {
         _trackInfoPanel = trackInfoPanelViewModel;
+        _soundCloudService = soundCloudService;
     }
 
     [RelayCommand]
@@ -38,14 +44,51 @@ public partial class SoundCloudSearchListViewModel : ObservableObject
 
         try
         {
-            // TODO: Implement actual SoundCloud search
-            await Task.Delay(100); // Placeholder for actual API call
+            var tracks = await _soundCloudService.SearchTracksAsync(SearchQuery, limit: 50);
+
+            foreach (var track in tracks)
+            {
+                var item = new SoundCloudSearchItemViewModel(OnSelectItem)
+                {
+                    Title = track.Title,
+                    Artist = track.Artist,
+                    Genre = track.Genre,
+                    Duration = track.FormattedDuration,
+                    Year = track.Year,
+                    TrackUrl = track.PermalinkUrl,
+                    Album = null // SoundCloud doesn't have albums
+                };
+
+                // Load artwork asynchronously
+                if (!string.IsNullOrEmpty(track.ArtworkUrl))
+                {
+                    _ = LoadArtworkAsync(item, track.ArtworkUrl);
+                }
+
+                SearchResults.Add(item);
+            }
         }
         finally
         {
             IsSearching = false;
             HasResults = SearchResults.Count > 0;
         }
+    }
+
+    private static async Task LoadArtworkAsync(SoundCloudSearchItemViewModel item, string artworkUrl)
+    {
+        try
+        {
+            var bitmap = new BitmapImage();
+            bitmap.UriSource = new Uri(artworkUrl);
+            item.AlbumCover = bitmap;
+        }
+        catch
+        {
+            // Ignore artwork loading failures
+        }
+
+        await Task.CompletedTask;
     }
 
     public void OnSelectItem(SoundCloudSearchItemViewModel item)

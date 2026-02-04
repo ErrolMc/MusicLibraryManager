@@ -76,6 +76,7 @@ public partial class App : Application
                     configBuilder
                         .EmbeddedSource<App>()
                         .Section<AppConfig>()
+                        .Section<SoundCloudConfig>()
                 )
                 .UseHttp((context, services) =>
                 {
@@ -90,12 +91,19 @@ public partial class App : Application
                     services.AddSingleton<IMusicLibraryService, MusicLibraryService>();
                     services.AddSingleton<IOverlayService, OverlayService>();
                     services.AddSingleton<IImageService, ImageService>();
+
+                    services.AddHttpClient();
+                    services.AddSingleton<ISoundCloudAuthService, SoundCloudAuthService>();
+                    services.AddSingleton<ISoundCloudService, SoundCloudService>();
+
                     services.AddSingleton<TrackListPanelViewModel>();
                     services.AddSingleton<MenuBarViewModel>();
                     services.AddSingleton<TrackInfoPanelViewModel>();
                     services.AddSingleton<SoundCloudTrackInfoPanelViewModel>();
                     services.AddSingleton<SoundCloudSearchListViewModel>();
                     services.AddSingleton<SoundCloudSplitPanelViewModel>();
+                    services.AddSingleton<SoundCloudSignInViewModel>();
+                    services.AddSingleton<SoundCloudWindowViewModel>();
                 })
                 .UseNavigation(RegisterRoutes)
             );
