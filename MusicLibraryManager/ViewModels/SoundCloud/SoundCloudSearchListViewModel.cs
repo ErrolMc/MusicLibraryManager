@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml.Media.Imaging;
 using MusicLibraryManager.Services;
 
@@ -79,16 +80,19 @@ public partial class SoundCloudSearchListViewModel : ObservableObject
     {
         try
         {
+            using var httpClient = new HttpClient();
+            var imageBytes = await httpClient.GetByteArrayAsync(artworkUrl);
+            item.AlbumCoverData = imageBytes;
+
             var bitmap = new BitmapImage();
-            bitmap.UriSource = new Uri(artworkUrl);
+            using var stream = new MemoryStream(imageBytes);
+            bitmap.SetSource(stream.AsRandomAccessStream());
             item.AlbumCover = bitmap;
         }
         catch
         {
             // Ignore artwork loading failures
         }
-
-        await Task.CompletedTask;
     }
 
     public void OnSelectItem(SoundCloudSearchItemViewModel item)
@@ -107,7 +111,8 @@ public partial class SoundCloudSearchListViewModel : ObservableObject
             albumArtist: null,
             track: null,
             duration: item.Duration,
-            albumCover: item.AlbumCover
+            albumCover: item.AlbumCover,
+            albumCoverData: item.AlbumCoverData
         );
     }
 }

@@ -43,6 +43,16 @@
                                 Height="180"
                                 BorderBrush="{ThemeResource OutlineBrush}"
                                 BorderThickness="1">
+                            <Border.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Copy"
+                                                    Command="{Binding CopyAlbumCoverCommand}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE8C8;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </Border.ContextFlyout>
                             <Grid>
                                 <FontIcon Glyph="&#xE8B9;"
                                           FontSize="48"

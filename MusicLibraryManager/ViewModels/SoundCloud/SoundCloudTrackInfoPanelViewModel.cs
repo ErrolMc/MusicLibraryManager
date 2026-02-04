@@ -1,9 +1,12 @@
 using Microsoft.UI.Xaml.Media.Imaging;
+using MusicLibraryManager.Services;
 
 namespace MusicLibraryManager.ViewModels.SoundCloud;
 
 public partial class SoundCloudTrackInfoPanelViewModel : ObservableObject
 {
+    private readonly IImageService _imageService;
+    private byte[]? _albumCoverData;
     [ObservableProperty]
     private string? fileName;
 
@@ -43,8 +46,9 @@ public partial class SoundCloudTrackInfoPanelViewModel : ObservableObject
     [ObservableProperty]
     private bool hasTrackLoaded;
 
-    public SoundCloudTrackInfoPanelViewModel()
+    public SoundCloudTrackInfoPanelViewModel(IImageService imageService)
     {
+        _imageService = imageService;
     }
 
     public void SetTrackInfo(
@@ -59,7 +63,8 @@ public partial class SoundCloudTrackInfoPanelViewModel : ObservableObject
         string? albumArtist,
         string? track,
         string? duration,
-        BitmapImage? albumCover)
+        BitmapImage? albumCover,
+        byte[]? albumCoverData = null)
     {
         FileName = fileName;
         Title = title;
@@ -73,6 +78,7 @@ public partial class SoundCloudTrackInfoPanelViewModel : ObservableObject
         Track = track;
         Duration = duration;
         AlbumCover = albumCover;
+        _albumCoverData = albumCoverData;
         HasTrackLoaded = true;
     }
 
@@ -90,6 +96,14 @@ public partial class SoundCloudTrackInfoPanelViewModel : ObservableObject
         Track = null;
         Duration = null;
         AlbumCover = null;
+        _albumCoverData = null;
         HasTrackLoaded = false;
+    }
+
+    [RelayCommand]
+    private void CopyAlbumCover()
+    {
+        if (_albumCoverData == null) return;
+        _imageService.CopyToClipboard(_albumCoverData);
     }
 }

@@ -29,6 +29,9 @@ public partial class SoundCloudSearchItemViewModel : ObservableObject
     private BitmapImage? albumCover;
 
     [ObservableProperty]
+    private byte[]? albumCoverData;
+
+    [ObservableProperty]
     private bool isSelected;
 
     private readonly Action<SoundCloudSearchItemViewModel>? _onSelectCallback;
