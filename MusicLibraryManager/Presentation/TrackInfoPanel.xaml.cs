@@ -1,3 +1,4 @@
+using Microsoft.UI.Xaml.Input;
 using MusicLibraryManager.ViewModels;
 
 namespace MusicLibraryManager.Presentation;
@@ -22,5 +23,10 @@ public sealed partial class TrackInfoPanel : UserControl
         {
             await ViewModel.SaveChangesAsync();
         }
+    }
+
+    private void AlbumCover_Tapped(object sender, TappedRoutedEventArgs e)
+    {
+        ViewModel?.ChangeAlbumCoverCommand.Execute(null);
     }
 }
