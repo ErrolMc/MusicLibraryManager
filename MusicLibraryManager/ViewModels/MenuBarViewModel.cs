@@ -1,34 +1,29 @@
 using System.Diagnostics;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using MusicLibraryManager.Presentation.SoundCloud;
 
 namespace MusicLibraryManager.ViewModels;
 
 public partial class MenuBarViewModel : ObservableObject
 {
     private readonly TrackListPanelViewModel _trackListPanelViewModel;
+    private SoundCloudWindow? _soundCloudWindow;
 
     [ObservableProperty]
     private string title = "Music Library Manager";
 
-    public ICommand NewCommand { get; }
     public ICommand OpenCommand { get; }
-    public ICommand SaveCommand { get; }
+    public ICommand SoundCloudCommand { get; }
     public ICommand SettingsCommand { get; }
 
     public MenuBarViewModel(TrackListPanelViewModel trackListPanelViewModel)
     {
         _trackListPanelViewModel = trackListPanelViewModel;
 
-        NewCommand = new RelayCommand(OnNew);
         OpenCommand = new AsyncRelayCommand(OnOpenAsync);
-        SaveCommand = new RelayCommand(OnSave);
+        SoundCloudCommand = new RelayCommand(OnSoundCloud);
         SettingsCommand = new RelayCommand(OnSettings);
-    }
-
-    private void OnNew()
-    {
-        // TODO: Implement new action
     }
 
     private async Task OnOpenAsync()
@@ -57,9 +52,19 @@ public partial class MenuBarViewModel : ObservableObject
         }
     }
 
-    private void OnSave()
+    private void OnSoundCloud()
     {
-        // TODO: Implement save action
+        // Only allow one SoundCloud window at a time
+        if (_soundCloudWindow is not null)
+        {
+            // Try to activate the existing window
+            _soundCloudWindow.Activate();
+            return;
+        }
+
+        _soundCloudWindow = new SoundCloudWindow();
+        _soundCloudWindow.Closed += (_, _) => _soundCloudWindow = null;
+        _soundCloudWindow.Activate();
     }
 
     private void OnSettings()

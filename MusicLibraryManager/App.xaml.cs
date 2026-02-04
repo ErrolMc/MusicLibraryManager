@@ -1,3 +1,5 @@
+using MusicLibraryManager.ViewModels.SoundCloud;
+using MusicLibraryManager.Presentation.SoundCloud;
 using Uno.Resizetizer;
 
 namespace MusicLibraryManager;
@@ -24,6 +26,11 @@ public partial class App : Application
     }
 
     protected IHost? Host { get; private set; }
+
+    /// <summary>
+    /// Gets the host for accessing services.
+    /// </summary>
+    public IHost? Services => Host;
 
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
     {
@@ -86,6 +93,9 @@ public partial class App : Application
                     services.AddSingleton<TrackListPanelViewModel>();
                     services.AddSingleton<MenuBarViewModel>();
                     services.AddSingleton<TrackInfoPanelViewModel>();
+                    services.AddSingleton<SoundCloudTrackInfoPanelViewModel>();
+                    services.AddSingleton<SoundCloudSearchListViewModel>();
+                    services.AddSingleton<SoundCloudSplitPanelViewModel>();
                 })
                 .UseNavigation(RegisterRoutes)
             );
@@ -105,7 +115,8 @@ public partial class App : Application
     {
         views.Register(
             new ViewMap(ViewModel: typeof(ShellViewModel)),
-            new ViewMap<SplitPanelPage, SplitPanelViewModel>()
+            new ViewMap<SplitPanelPage, SplitPanelViewModel>(),
+            new ViewMap<SoundCloudSplitPanelPage, SoundCloudSplitPanelViewModel>()
         );
 
         routes.Register(
@@ -113,6 +124,7 @@ public partial class App : Application
                 Nested:
                 [
                     new ("SplitPanel", View: views.FindByViewModel<SplitPanelViewModel>(), IsDefault:true),
+                    new ("SoundCloud", View: views.FindByViewModel<SoundCloudSplitPanelViewModel>()),
                 ]
             )
         );

@@ -1,0 +1,131 @@
+﻿<UserControl x:Class="MusicLibraryManager.Presentation.SoundCloud.SoundCloudTrackInfoPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicLibraryManager.ViewModels.SoundCloud"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:SoundCloudTrackInfoPanelViewModel}">
+
+    <Border Background="{ThemeResource SurfaceVariantBrush}"
+            CornerRadius="8"
+            Margin="8,8,4,8"
+            Translation="0,0,8">
+        <Border.Shadow>
+            <ThemeShadow />
+        </Border.Shadow>
+        <Grid Padding="12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Text="Track Info"
+                       Style="{StaticResource SubtitleTextBlockStyle}"
+                       Margin="0,0,0,8" />
+
+            <ScrollViewer Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+                <StackPanel Spacing="6"
+                            HorizontalAlignment="Stretch"
+                            Padding="0,0,20,0"
+                            Visibility="{Binding HasTrackLoaded}">
+
+                    <!-- Album Art at top for SoundCloud -->
+                    <StackPanel Spacing="2"
+                                Margin="0,0,0,8"
+                                HorizontalAlignment="Center">
+                        <Border Background="{ThemeResource SurfaceBrush}"
+                                CornerRadius="4"
+                                Width="180"
+                                Height="180"
+                                BorderBrush="{ThemeResource OutlineBrush}"
+                                BorderThickness="1">
+                            <Grid>
+                                <FontIcon Glyph="&#xE8B9;"
+                                          FontSize="48"
+                                          Opacity="0.3"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                                <Image Source="{Binding AlbumCover}"
+                                       Stretch="UniformToFill"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Title -->
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Title"
+                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                   Opacity="0.7" />
+                        <TextBlock Text="{Binding Title}"
+                                   Style="{StaticResource BodyTextBlockStyle}"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+
+                    <!-- Artist -->
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Artist"
+                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                   Opacity="0.7" />
+                        <TextBlock Text="{Binding Artist}"
+                                   Style="{StaticResource BodyTextBlockStyle}"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+
+                    <!-- Album -->
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Album"
+                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                   Opacity="0.7" />
+                        <TextBlock Text="{Binding Album}"
+                                   Style="{StaticResource BodyTextBlockStyle}"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+
+                    <!-- Duration -->
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Duration"
+                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                   Opacity="0.7" />
+                        <TextBlock Text="{Binding Duration}"
+                                   Style="{StaticResource BodyTextBlockStyle}" />
+                    </StackPanel>
+
+                    <!-- Genre -->
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Genre"
+                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                   Opacity="0.7" />
+                        <TextBlock Text="{Binding Genre}"
+                                   Style="{StaticResource BodyTextBlockStyle}" />
+                    </StackPanel>
+
+                    <!-- Year -->
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Year"
+                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                   Opacity="0.7" />
+                        <TextBlock Text="{Binding Year}"
+                                   Style="{StaticResource BodyTextBlockStyle}" />
+                    </StackPanel>
+
+                    <!-- Comment -->
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Description"
+                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                   Opacity="0.7" />
+                        <TextBlock Text="{Binding Comment}"
+                                   Style="{StaticResource BodyTextBlockStyle}"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</UserControl>

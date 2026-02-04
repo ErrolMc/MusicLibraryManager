@@ -19,14 +19,6 @@ d:DataContext="{d:DesignInstance Type=vm:MenuBarViewModel}">
         <StackPanel Grid.Column="0"
                     Orientation="Horizontal"
                     Spacing="4">
-            <Button Command="{Binding NewCommand}"
-                    Style="{StaticResource FilledTonalButtonStyle}"
-                    ToolTipService.ToolTip="New">
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <FontIcon Glyph="&#xE710;" FontSize="16" />
-                    <TextBlock Text="New" VerticalAlignment="Center" />
-                </StackPanel>
-            </Button>
             <Button Command="{Binding OpenCommand}"
                     Style="{StaticResource FilledTonalButtonStyle}"
                     ToolTipService.ToolTip="Open">
@@ -35,12 +27,12 @@ d:DataContext="{d:DesignInstance Type=vm:MenuBarViewModel}">
                     <TextBlock Text="Open" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
-            <Button Command="{Binding SaveCommand}"
+            <Button Command="{Binding SoundCloudCommand}"
                     Style="{StaticResource FilledTonalButtonStyle}"
-                    ToolTipService.ToolTip="Save">
+                    ToolTipService.ToolTip="SoundCloud">
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <FontIcon Glyph="&#xE74E;" FontSize="16" />
-                    <TextBlock Text="Save" VerticalAlignment="Center" />
+                    <FontIcon Glyph="&#xE753;" FontSize="16" />
+                    <TextBlock Text="SoundCloud" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
         </StackPanel>
