@@ -115,4 +115,13 @@ public partial class SoundCloudSearchListViewModel : ObservableObject
             albumCoverData: item.AlbumCoverData
         );
     }
+
+    public void Clear()
+    {
+        SearchQuery = null;
+        SearchResults.Clear();
+        HasResults = false;
+        _selectedItem = null;
+        _trackInfoPanel.ClearTrackInfo();
+    }
 }

@@ -25,8 +25,16 @@ public sealed partial class SoundCloudWindow : Window
                 rootElement.DataContext = _viewModel;
             }
 
+            // Subscribe to close request (e.g., when signed out)
+            _viewModel.CloseRequested += OnCloseRequested;
+
             // Initialize async (load stored tokens)
             _ = _viewModel.InitializeAsync();
         }
+    }
+
+    private void OnCloseRequested(object? sender, EventArgs e)
+    {
+        Close();
     }
 }

@@ -2,28 +2,50 @@ using System.Diagnostics;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using MusicLibraryManager.Presentation.SoundCloud;
+using MusicLibraryManager.Services;
 
 namespace MusicLibraryManager.ViewModels;
 
 public partial class MenuBarViewModel : ObservableObject
 {
     private readonly TrackListPanelViewModel _trackListPanelViewModel;
+    private readonly ISoundCloudAuthService _soundCloudAuthService;
     private SoundCloudWindow? _soundCloudWindow;
 
     [ObservableProperty]
     private string title = "Music Library Manager";
 
+    [ObservableProperty]
+    private bool isSoundCloudAuthenticated;
+
     public ICommand OpenCommand { get; }
     public ICommand SoundCloudCommand { get; }
-    public ICommand SettingsCommand { get; }
+    public ICommand SignOutSoundCloudCommand { get; }
 
-    public MenuBarViewModel(TrackListPanelViewModel trackListPanelViewModel)
+    public MenuBarViewModel(
+        TrackListPanelViewModel trackListPanelViewModel,
+        ISoundCloudAuthService soundCloudAuthService)
     {
         _trackListPanelViewModel = trackListPanelViewModel;
+        _soundCloudAuthService = soundCloudAuthService;
 
         OpenCommand = new AsyncRelayCommand(OnOpenAsync);
         SoundCloudCommand = new RelayCommand(OnSoundCloud);
-        SettingsCommand = new RelayCommand(OnSettings);
+        SignOutSoundCloudCommand = new AsyncRelayCommand(OnSignOutSoundCloudAsync);
+
+        // Subscribe to auth state changes
+        _soundCloudAuthService.AuthenticationStateChanged += OnAuthStateChanged;
+        IsSoundCloudAuthenticated = _soundCloudAuthService.IsAuthenticated;
+    }
+
+    private void OnAuthStateChanged(object? sender, bool isAuthenticated)
+    {
+        IsSoundCloudAuthenticated = isAuthenticated;
+    }
+
+    private async Task OnSignOutSoundCloudAsync()
+    {
+        await _soundCloudAuthService.SignOutAsync();
     }
 
     private async Task OnOpenAsync()
@@ -67,8 +89,4 @@ public partial class MenuBarViewModel : ObservableObject
         _soundCloudWindow.Activate();
     }
 
-    private void OnSettings()
-    {
-        // TODO: Implement settings action
     }
-}

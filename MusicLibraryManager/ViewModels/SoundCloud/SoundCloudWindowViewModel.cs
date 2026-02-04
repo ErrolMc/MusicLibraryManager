@@ -9,6 +9,8 @@ public partial class SoundCloudWindowViewModel : ObservableObject
     public SoundCloudSignInViewModel SignInViewModel { get; }
     public SoundCloudSplitPanelViewModel SplitPanelViewModel { get; }
 
+    public event EventHandler? CloseRequested;
+
     [ObservableProperty]
     private bool isAuthenticated;
 
@@ -42,17 +44,17 @@ public partial class SoundCloudWindowViewModel : ObservableObject
     private void OnAuthenticationStateChanged(object? sender, bool isAuthenticated)
     {
         IsAuthenticated = isAuthenticated;
+
+        if (!isAuthenticated)
+        {
+            // Clear search results and track info when signed out
+            SplitPanelViewModel.SoundCloudSearchListViewModel.Clear();
+            CloseRequested?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     private void OnSignInCompleted(object? sender, EventArgs e)
     {
         IsAuthenticated = true;
-    }
-
-    [RelayCommand]
-    private async Task SignOutAsync()
-    {
-        await _authService.SignOutAsync();
-        IsAuthenticated = false;
     }
 }

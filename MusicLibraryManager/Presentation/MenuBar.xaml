@@ -48,10 +48,20 @@ d:DataContext="{d:DesignInstance Type=vm:MenuBarViewModel}">
         <StackPanel Grid.Column="2"
                     Orientation="Horizontal"
                     Spacing="4">
-            <Button Command="{Binding SettingsCommand}"
-                    Style="{StaticResource FilledTonalButtonStyle}"
+            <Button Style="{StaticResource FilledTonalButtonStyle}"
                     ToolTipService.ToolTip="Settings">
                 <FontIcon Glyph="&#xE713;" FontSize="16" />
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="Sign out of SoundCloud"
+                                        Command="{Binding SignOutSoundCloudCommand}"
+                                        Visibility="{Binding IsSoundCloudAuthenticated}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8AB;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </Button.Flyout>
             </Button>
         </StackPanel>
     </Grid>

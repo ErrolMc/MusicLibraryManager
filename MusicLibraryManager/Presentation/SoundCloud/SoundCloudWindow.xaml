@@ -8,27 +8,8 @@
         Title="SoundCloud">
 
     <Grid x:Name="RootGrid" Background="{ThemeResource BackgroundBrush}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <!-- Header with Sign Out button (when authenticated) -->
-        <Grid Grid.Row="0"
-              Visibility="{Binding IsAuthenticated}"
-              Padding="16,8">
-            <Button Command="{Binding SignOutCommand}"
-                    HorizontalAlignment="Right"
-                    Style="{StaticResource OutlinedButtonStyle}">
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <FontIcon Glyph="&#xE8AB;" FontSize="14" />
-                    <TextBlock Text="Sign Out" />
-                </StackPanel>
-            </Button>
-        </Grid>
-
         <!-- Loading State -->
-        <ProgressRing Grid.Row="1"
+        <ProgressRing
                       IsActive="{Binding IsLoading}"
                       Visibility="{Binding IsLoading}"
                       HorizontalAlignment="Center"
@@ -37,13 +18,11 @@
                       Height="48" />
 
         <!-- Sign In Panel (when not authenticated and not loading) -->
-        <scviews:SoundCloudSignInPanel Grid.Row="1"
-                                        DataContext="{Binding SignInViewModel}"
+        <scviews:SoundCloudSignInPanel DataContext="{Binding SignInViewModel}"
                                         Visibility="{Binding DataContext.IsAuthenticated, ElementName=RootGrid, Converter={StaticResource TrueToCollapsedConverter}}" />
 
         <!-- Main Content (Split Panel) - when authenticated -->
-        <scviews:SoundCloudSplitPanelPage Grid.Row="1"
-                                           DataContext="{Binding SplitPanelViewModel}"
+        <scviews:SoundCloudSplitPanelPage DataContext="{Binding SplitPanelViewModel}"
                                            Visibility="{Binding DataContext.IsAuthenticated, ElementName=RootGrid}" />
     </Grid>
 </Window>
