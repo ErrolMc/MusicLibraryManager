@@ -29,4 +29,9 @@ public sealed partial class TrackInfoPanel : UserControl
     {
         ViewModel?.ChangeAlbumCoverCommand.Execute(null);
     }
+
+    private void AlbumCoverContextMenu_Opening(object sender, object e)
+    {
+        ViewModel?.RefreshClipboardState();
+    }
 }

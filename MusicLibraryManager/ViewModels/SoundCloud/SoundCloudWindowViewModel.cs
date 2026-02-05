@@ -41,14 +41,18 @@ public partial class SoundCloudWindowViewModel : ObservableObject
         IsLoading = false;
     }
 
+    public void OnClosed()
+    {
+        // Clear search results and track info to free memory
+        SplitPanelViewModel.SoundCloudSearchListViewModel.Clear();
+    }
+
     private void OnAuthenticationStateChanged(object? sender, bool isAuthenticated)
     {
         IsAuthenticated = isAuthenticated;
 
         if (!isAuthenticated)
         {
-            // Clear search results and track info when signed out
-            SplitPanelViewModel.SoundCloudSearchListViewModel.Clear();
             CloseRequested?.Invoke(this, EventArgs.Empty);
         }
     }

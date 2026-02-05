@@ -28,6 +28,9 @@ public sealed partial class SoundCloudWindow : Window
             // Subscribe to close request (e.g., when signed out)
             _viewModel.CloseRequested += OnCloseRequested;
 
+            // Clear data when window closes to free memory
+            this.Closed += OnWindowClosed;
+
             // Initialize async (load stored tokens)
             _ = _viewModel.InitializeAsync();
         }
@@ -36,5 +39,10 @@ public sealed partial class SoundCloudWindow : Window
     private void OnCloseRequested(object? sender, EventArgs e)
     {
         Close();
+    }
+
+    private void OnWindowClosed(object sender, WindowEventArgs args)
+    {
+        _viewModel?.OnClosed();
     }
 }

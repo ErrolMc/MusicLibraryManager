@@ -301,4 +301,29 @@ public partial class TrackInfoPanelViewModel : ObservableObject
 
         UpdateHasChanges();
     }
+
+    [RelayCommand(CanExecute = nameof(CanPasteAlbumCover))]
+    private void ReplaceAlbumCoverFromClipboard()
+    {
+        if (_currentTrack == null) return;
+
+        var (imageData, mimeType) = _imageService.GetImageFromClipboard();
+        if (imageData == null || mimeType == null) return;
+
+        _newAlbumCoverData = imageData;
+        _newAlbumCoverMimeType = mimeType;
+        _albumCoverChanged = true;
+
+        // Update the displayed album cover
+        var bitmap = new BitmapImage();
+        using var imageStream = new MemoryStream(imageData);
+        bitmap.SetSource(imageStream.AsRandomAccessStream());
+        AlbumCover = bitmap;
+
+        UpdateHasChanges();
+    }
+
+    private bool CanPasteAlbumCover() => _currentTrack != null && _imageService.HasImageInClipboard();
+
+    public void RefreshClipboardState() => ReplaceAlbumCoverFromClipboardCommand.NotifyCanExecuteChanged();
 }

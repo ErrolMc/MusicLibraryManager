@@ -182,11 +182,17 @@
                                 HorizontalAlignment="Left"
                                 Tapped="AlbumCover_Tapped">
                             <Border.ContextFlyout>
-                                <MenuFlyout>
+                                <MenuFlyout Opening="AlbumCoverContextMenu_Opening">
                                     <MenuFlyoutItem Text="Copy"
                                                     Command="{Binding CopyAlbumCoverCommand}">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE8C8;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Replace from Clipboard"
+                                                    Command="{Binding ReplaceAlbumCoverFromClipboardCommand}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE77F;" />
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutItem Text="Change"

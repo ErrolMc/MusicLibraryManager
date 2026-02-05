@@ -97,6 +97,93 @@ public class ImageService : IImageService
         return pictures[0].Data.Data;
     }
 
+    public bool HasImageInClipboard()
+    {
+        const uint CF_DIB = 8;
+        return IsClipboardFormatAvailable(CF_DIB);
+    }
+
+    public (byte[]? Data, string? MimeType) GetImageFromClipboard()
+    {
+        const uint CF_DIB = 8;
+
+        if (!OpenClipboard(IntPtr.Zero))
+            return (null, null);
+
+        try
+        {
+            var hData = GetClipboardData(CF_DIB);
+            if (hData == IntPtr.Zero)
+                return (null, null);
+
+            var pData = GlobalLock(hData);
+            if (pData == IntPtr.Zero)
+                return (null, null);
+
+            try
+            {
+                // Read BITMAPINFOHEADER
+                var biSize = Marshal.ReadInt32(pData, 0);
+                var width = Marshal.ReadInt32(pData, 4);
+                var height = Marshal.ReadInt32(pData, 8);
+                var biBitCount = Marshal.ReadInt16(pData, 14);
+                var biCompression = Marshal.ReadInt32(pData, 16);
+
+                // Only handle uncompressed 32-bit or 24-bit bitmaps
+                if (biCompression != 0 || (biBitCount != 32 && biBitCount != 24))
+                    return (null, null);
+
+                var absHeight = Math.Abs(height);
+                var bytesPerPixel = biBitCount / 8;
+                var srcStride = ((width * bytesPerPixel + 3) / 4) * 4; // DIB rows are 4-byte aligned
+                var pixelDataOffset = biSize;
+                var isBottomUp = height > 0;
+
+                // Create SKBitmap and copy pixel data
+                using var skBitmap = new SKBitmap(width, absHeight, SKColorType.Bgra8888, SKAlphaType.Premul);
+                var dstPixels = skBitmap.GetPixels();
+
+                for (int y = 0; y < absHeight; y++)
+                {
+                    var srcY = isBottomUp ? (absHeight - 1 - y) : y;
+                    var srcOffset = pixelDataOffset + srcY * srcStride;
+
+                    for (int x = 0; x < width; x++)
+                    {
+                        var srcPixelOffset = srcOffset + x * bytesPerPixel;
+                        var dstPixelOffset = (y * width + x) * 4;
+
+                        byte b = Marshal.ReadByte(pData, srcPixelOffset);
+                        byte g = Marshal.ReadByte(pData, srcPixelOffset + 1);
+                        byte r = Marshal.ReadByte(pData, srcPixelOffset + 2);
+                        byte a = biBitCount == 32 ? Marshal.ReadByte(pData, srcPixelOffset + 3) : (byte)255;
+
+                        Marshal.WriteByte(dstPixels + dstPixelOffset, b);
+                        Marshal.WriteByte(dstPixels + dstPixelOffset + 1, g);
+                        Marshal.WriteByte(dstPixels + dstPixelOffset + 2, r);
+                        Marshal.WriteByte(dstPixels + dstPixelOffset + 3, a);
+                    }
+                }
+
+                // Encode to PNG
+                using var image = SKImage.FromBitmap(skBitmap);
+                using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+                return (data.ToArray(), "image/png");
+            }
+            finally
+            {
+                GlobalUnlock(hData);
+            }
+        }
+        finally
+        {
+            CloseClipboard();
+        }
+    }
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern bool IsClipboardFormatAvailable(uint format);
+
     [DllImport("user32.dll", SetLastError = true)]
     private static extern bool OpenClipboard(IntPtr hWndNewOwner);
 
@@ -108,6 +195,9 @@ public class ImageService : IImageService
 
     [DllImport("user32.dll", SetLastError = true)]
     private static extern IntPtr SetClipboardData(uint uFormat, IntPtr hMem);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern IntPtr GetClipboardData(uint uFormat);
 
     [DllImport("kernel32.dll", SetLastError = true)]
     private static extern IntPtr GlobalAlloc(uint uFlags, UIntPtr dwBytes);
