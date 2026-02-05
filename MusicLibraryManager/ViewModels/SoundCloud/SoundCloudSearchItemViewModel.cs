@@ -26,6 +26,9 @@ public partial class SoundCloudSearchItemViewModel : ObservableObject
     private string? trackUrl;
 
     [ObservableProperty]
+    private long trackId;
+
+    [ObservableProperty]
     private BitmapImage? albumCover;
 
     [ObservableProperty]

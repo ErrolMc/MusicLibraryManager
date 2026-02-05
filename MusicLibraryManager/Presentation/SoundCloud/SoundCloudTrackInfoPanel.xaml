@@ -18,6 +18,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0"
@@ -193,6 +194,98 @@
 
                 </StackPanel>
             </ScrollViewer>
+
+            <!-- Playback Controls -->
+            <StackPanel Grid.Row="2"
+                        Spacing="4"
+                        Margin="0,8,0,0"
+                        Visibility="{Binding HasTrackLoaded}">
+                <TextBlock Text="Playback"
+                           Style="{StaticResource CaptionTextBlockStyle}"
+                           Opacity="0.7" />
+
+                <!-- Transport buttons -->
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            Spacing="4">
+                    <Button Command="{Binding PlayPauseCommand}"
+                            Width="40" Height="40"
+                            CornerRadius="20"
+                            Padding="0">
+                        <Grid>
+                            <!-- Play icon (visible when not playing) -->
+                            <FontIcon Glyph="&#xE768;"
+                                      FontSize="18"
+                                      Visibility="{Binding IsPlaying, Converter={StaticResource TrueToCollapsedConverter}}" />
+                            <!-- Pause icon (visible when playing) -->
+                            <FontIcon Glyph="&#xE769;"
+                                      FontSize="18"
+                                      Visibility="{Binding IsPlaying}" />
+                        </Grid>
+                    </Button>
+                    <Button Command="{Binding StopPlaybackCommand}"
+                            Width="36" Height="36"
+                            CornerRadius="18"
+                            Padding="0">
+                        <FontIcon Glyph="&#xE71A;"
+                                  FontSize="14" />
+                    </Button>
+                </StackPanel>
+
+                <!-- Loading indicator -->
+                <ProgressBar IsIndeterminate="True"
+                             Visibility="{Binding IsLoadingStream}"
+                             Margin="0,2" />
+
+                <!-- Seek slider with time labels -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding PositionText}"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               Opacity="0.7"
+                               VerticalAlignment="Center"
+                               Margin="0,0,6,0" />
+                    <Slider Grid.Column="1"
+                            x:Name="SeekSlider"
+                            Minimum="0"
+                            Maximum="{Binding PlaybackDuration}"
+                            Value="{Binding PlaybackPosition, Mode=TwoWay}"
+                            VerticalAlignment="Center"
+                            PointerPressed="SeekSlider_PointerPressed"
+                            PointerReleased="SeekSlider_PointerReleased"
+                            PointerCaptureLost="SeekSlider_PointerCaptureLost" />
+                    <TextBlock Grid.Column="2"
+                               Text="{Binding DurationText}"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               Opacity="0.7"
+                               VerticalAlignment="Center"
+                               Margin="6,0,0,0" />
+                </Grid>
+
+                <!-- Volume -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <FontIcon Grid.Column="0"
+                              Glyph="&#xE767;"
+                              FontSize="14"
+                              Opacity="0.7"
+                              VerticalAlignment="Center"
+                              Margin="0,0,6,0" />
+                    <Slider Grid.Column="1"
+                            Minimum="0"
+                            Maximum="100"
+                            Value="{Binding Volume, Mode=TwoWay}"
+                            VerticalAlignment="Center" />
+                </Grid>
+            </StackPanel>
         </Grid>
     </Border>
 </UserControl>

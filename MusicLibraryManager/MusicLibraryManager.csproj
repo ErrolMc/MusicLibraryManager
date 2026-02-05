@@ -35,9 +35,11 @@
       Navigation;
       ThemeService;
       SkiaRenderer;
+      WebView;
     </UnoFeatures>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="NAudio" />
     <PackageReference Include="TagLibSharp" />
   </ItemGroup>
   <ItemGroup>

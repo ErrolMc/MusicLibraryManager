@@ -57,6 +57,7 @@ public partial class SoundCloudSearchListViewModel : ObservableObject
                     Duration = track.FormattedDuration,
                     Year = track.Year,
                     TrackUrl = track.PermalinkUrl,
+                    TrackId = track.Id,
                     Album = null // SoundCloud doesn't have albums
                 };
 
@@ -112,7 +113,8 @@ public partial class SoundCloudSearchListViewModel : ObservableObject
             track: null,
             duration: item.Duration,
             albumCover: item.AlbumCover,
-            albumCoverData: item.AlbumCoverData
+            albumCoverData: item.AlbumCoverData,
+            trackId: item.TrackId
         );
     }
 
