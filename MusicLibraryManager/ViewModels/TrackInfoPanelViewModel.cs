@@ -190,6 +190,9 @@ public partial class TrackInfoPanelViewModel : ObservableObject
     {
         if (_currentTrack == null || !HasChanges) return true;
 
+        // Stop playback to release file lock before saving
+        Playback.Reset();
+
         uint.TryParse(Year, out var yearValue);
         uint.TryParse(Track, out var trackValue);
 
