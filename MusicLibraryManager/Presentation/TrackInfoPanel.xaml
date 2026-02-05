@@ -222,6 +222,18 @@
                             </Grid>
                         </Border>
                     </StackPanel>
+
+                <!-- Audio Player -->
+                <StackPanel Spacing="2"
+                            Margin="0,4,0,0"
+                            Visibility="{Binding HasTrackLoaded}">
+                    <TextBlock Text="Playback"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               Opacity="0.7" />
+                    <MediaPlayerElement Source="{Binding TrackMediaSource}"
+                                        AutoPlay="False"
+                                        AreTransportControlsEnabled="True" />
+                </StackPanel>
                                                 </StackPanel>
                                             </ScrollViewer>
 
