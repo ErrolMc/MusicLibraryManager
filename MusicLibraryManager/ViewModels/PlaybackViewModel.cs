@@ -1,11 +1,16 @@
 using Microsoft.UI.Dispatching;
 using MusicLibraryManager.Services;
+using Windows.Storage;
 
 namespace MusicLibraryManager.ViewModels;
 
 public partial class PlaybackViewModel : ObservableObject
 {
+    private const string VolumeStorageKeyPrefix = "PlaybackVolume_";
+
     private readonly IPlaybackService _playbackService;
+    private readonly string _volumeStorageKey;
+    private readonly double _volumeMultiplier;
     private DispatcherQueue? _dispatcherQueue;
     private DispatcherQueueTimer? _positionTimer;
     private bool _isSeeking;
@@ -41,14 +46,18 @@ public partial class PlaybackViewModel : ObservableObject
     /// </summary>
     public Func<Task>? LoadRequestedAsync { get; set; }
 
-    public PlaybackViewModel(IPlaybackService playbackService)
+    public PlaybackViewModel(IPlaybackService playbackService, string storageId = "Default", double volumeMultiplier = 1.0)
     {
         _playbackService = playbackService;
+        _volumeStorageKey = VolumeStorageKeyPrefix + storageId;
+        _volumeMultiplier = Math.Clamp(volumeMultiplier, 0.0, 1.0);
 
         _playbackService.PlaybackStateChanged += OnPlaybackStateChanged;
         _playbackService.PlaybackEnded += OnPlaybackEnded;
 
-        _playbackService.Volume = 1.0f;
+        // Load persisted volume from local storage
+        Volume = LoadVolumeFromStorage();
+        _playbackService.Volume = (float)((Volume / 100.0) * _volumeMultiplier);
     }
 
     private void EnsureTimer()
@@ -133,7 +142,8 @@ public partial class PlaybackViewModel : ObservableObject
 
     partial void OnVolumeChanged(double value)
     {
-        _playbackService.Volume = (float)(value / 100.0);
+        _playbackService.Volume = (float)((value / 100.0) * _volumeMultiplier);
+        SaveVolumeToStorage(value);
     }
 
     public void BeginSeek() => _isSeeking = true;
@@ -213,5 +223,36 @@ public partial class PlaybackViewModel : ObservableObject
         return time.TotalHours >= 1
             ? time.ToString(@"h\:mm\:ss")
             : time.ToString(@"m\:ss");
+    }
+
+    private double LoadVolumeFromStorage()
+    {
+        try
+        {
+            var localSettings = ApplicationData.Current.LocalSettings;
+            if (localSettings.Values.TryGetValue(_volumeStorageKey, out var value) && value is double storedVolume)
+            {
+                return Math.Clamp(storedVolume, 0, 100);
+            }
+        }
+        catch
+        {
+            // Ignore storage errors
+        }
+
+        return 100; // Default volume
+    }
+
+    private void SaveVolumeToStorage(double volume)
+    {
+        try
+        {
+            var localSettings = ApplicationData.Current.LocalSettings;
+            localSettings.Values[_volumeStorageKey] = volume;
+        }
+        catch
+        {
+            // Ignore storage errors
+        }
     }
 }

@@ -79,7 +79,7 @@ public partial class TrackInfoPanelViewModel : ObservableObject
     {
         _musicLibraryService = musicLibraryService;
         _imageService = imageService;
-        Playback = new PlaybackViewModel(playbackService);
+        Playback = new PlaybackViewModel(playbackService, "Local");
     }
 
     partial void OnFileNameWithoutExtensionChanged(string? value) => UpdateHasChanges();

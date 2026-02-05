@@ -57,7 +57,7 @@ public partial class SoundCloudTrackInfoPanelViewModel : ObservableObject
     {
         _imageService = imageService;
         _playbackService = playbackService;
-        Playback = new PlaybackViewModel(playbackService);
+        Playback = new PlaybackViewModel(playbackService, "SoundCloud", volumeMultiplier: 0.1);
     }
 
     public void SetTrackInfo(
