@@ -106,4 +106,26 @@ public partial class SoundCloudTrackInfoPanelViewModel : ObservableObject
         if (_albumCoverData == null) return;
         _imageService.CopyToClipboard(_albumCoverData);
     }
+
+    [RelayCommand]
+    private void CopyField(string fieldName)
+    {
+        var value = fieldName switch
+        {
+            "Title" => Title,
+            "Artist" => Artist,
+            "Album" => Album,
+            "Duration" => Duration,
+            "Genre" => Genre,
+            "Year" => Year,
+            "Description" => Comment,
+            _ => null
+        };
+
+        if (string.IsNullOrEmpty(value)) return;
+
+        var dataPackage = new Windows.ApplicationModel.DataTransfer.DataPackage();
+        dataPackage.SetText(value);
+        Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage);
+    }
 }

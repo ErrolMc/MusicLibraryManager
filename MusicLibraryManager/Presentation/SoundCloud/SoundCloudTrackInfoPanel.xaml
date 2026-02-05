@@ -67,71 +67,128 @@
                         </Border>
                     </StackPanel>
 
-                    <!-- Title -->
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="Title"
-                                   Style="{StaticResource CaptionTextBlockStyle}"
-                                   Opacity="0.7" />
-                        <TextBlock Text="{Binding Title}"
-                                   Style="{StaticResource BodyTextBlockStyle}"
-                                   TextWrapping="Wrap" />
-                    </StackPanel>
+                    <!-- Track details with copy context menu -->
+                    <StackPanel Spacing="6">
+                        <StackPanel.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Text="Copy Title"
+                                                Command="{Binding CopyFieldCommand}"
+                                                CommandParameter="Title">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Copy Artist"
+                                                Command="{Binding CopyFieldCommand}"
+                                                CommandParameter="Artist">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Copy Album"
+                                                Command="{Binding CopyFieldCommand}"
+                                                CommandParameter="Album">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Copy Genre"
+                                                Command="{Binding CopyFieldCommand}"
+                                                CommandParameter="Genre">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Copy Year"
+                                                Command="{Binding CopyFieldCommand}"
+                                                CommandParameter="Year">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Copy Duration"
+                                                Command="{Binding CopyFieldCommand}"
+                                                CommandParameter="Duration">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Copy Description"
+                                                Command="{Binding CopyFieldCommand}"
+                                                CommandParameter="Description">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </StackPanel.ContextFlyout>
 
-                    <!-- Artist -->
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="Artist"
-                                   Style="{StaticResource CaptionTextBlockStyle}"
-                                   Opacity="0.7" />
-                        <TextBlock Text="{Binding Artist}"
-                                   Style="{StaticResource BodyTextBlockStyle}"
-                                   TextWrapping="Wrap" />
-                    </StackPanel>
+                        <!-- Title -->
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Title"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       Opacity="0.7" />
+                            <TextBlock Text="{Binding Title}"
+                                       Style="{StaticResource BodyTextBlockStyle}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
 
-                    <!-- Album -->
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="Album"
-                                   Style="{StaticResource CaptionTextBlockStyle}"
-                                   Opacity="0.7" />
-                        <TextBlock Text="{Binding Album}"
-                                   Style="{StaticResource BodyTextBlockStyle}"
-                                   TextWrapping="Wrap" />
-                    </StackPanel>
+                        <!-- Artist -->
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Artist"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       Opacity="0.7" />
+                            <TextBlock Text="{Binding Artist}"
+                                       Style="{StaticResource BodyTextBlockStyle}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
 
-                    <!-- Duration -->
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="Duration"
-                                   Style="{StaticResource CaptionTextBlockStyle}"
-                                   Opacity="0.7" />
-                        <TextBlock Text="{Binding Duration}"
-                                   Style="{StaticResource BodyTextBlockStyle}" />
-                    </StackPanel>
+                        <!-- Album -->
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Album"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       Opacity="0.7" />
+                            <TextBlock Text="{Binding Album}"
+                                       Style="{StaticResource BodyTextBlockStyle}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
 
-                    <!-- Genre -->
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="Genre"
-                                   Style="{StaticResource CaptionTextBlockStyle}"
-                                   Opacity="0.7" />
-                        <TextBlock Text="{Binding Genre}"
-                                   Style="{StaticResource BodyTextBlockStyle}" />
-                    </StackPanel>
+                        <!-- Duration -->
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Duration"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       Opacity="0.7" />
+                            <TextBlock Text="{Binding Duration}"
+                                       Style="{StaticResource BodyTextBlockStyle}" />
+                        </StackPanel>
 
-                    <!-- Year -->
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="Year"
-                                   Style="{StaticResource CaptionTextBlockStyle}"
-                                   Opacity="0.7" />
-                        <TextBlock Text="{Binding Year}"
-                                   Style="{StaticResource BodyTextBlockStyle}" />
-                    </StackPanel>
+                        <!-- Genre -->
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Genre"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       Opacity="0.7" />
+                            <TextBlock Text="{Binding Genre}"
+                                       Style="{StaticResource BodyTextBlockStyle}" />
+                        </StackPanel>
 
-                    <!-- Comment -->
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="Description"
-                                   Style="{StaticResource CaptionTextBlockStyle}"
-                                   Opacity="0.7" />
-                        <TextBlock Text="{Binding Comment}"
-                                   Style="{StaticResource BodyTextBlockStyle}"
-                                   TextWrapping="Wrap" />
+                        <!-- Year -->
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Year"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       Opacity="0.7" />
+                            <TextBlock Text="{Binding Year}"
+                                       Style="{StaticResource BodyTextBlockStyle}" />
+                        </StackPanel>
+
+                        <!-- Comment -->
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Description"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       Opacity="0.7" />
+                            <TextBlock Text="{Binding Comment}"
+                                       Style="{StaticResource BodyTextBlockStyle}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
                     </StackPanel>
 
                 </StackPanel>

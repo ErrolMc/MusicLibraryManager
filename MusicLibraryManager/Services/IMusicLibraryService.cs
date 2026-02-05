@@ -20,5 +20,6 @@ public record TrackUpdateInfo(
     uint? Year,
     uint? TrackNumber,
     byte[]? AlbumCoverData = null,
-    string? AlbumCoverMimeType = null
+    string? AlbumCoverMimeType = null,
+    bool RemoveAlbumCover = false
 );

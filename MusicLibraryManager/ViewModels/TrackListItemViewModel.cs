@@ -1,3 +1,6 @@
+using System.Runtime.InteropServices.WindowsRuntime;
+using Microsoft.UI.Xaml.Media.Imaging;
+
 namespace MusicLibraryManager.ViewModels;
 
 public partial class TrackListItemViewModel : ObservableObject
@@ -21,6 +24,9 @@ public partial class TrackListItemViewModel : ObservableObject
 
     [ObservableProperty]
     private int year;
+
+    [ObservableProperty]
+    private BitmapImage? albumCover;
 
     private readonly Action<TrackListItemViewModel>? _onClickAction;
     private readonly Track? _track;
@@ -57,10 +63,32 @@ public partial class TrackListItemViewModel : ObservableObject
     {
         if (_track == null) return;
 
+        var fullFileName = Path.GetFileName(_track.FilePath);
+        FileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullFileName);
+        _fileExtension = Path.GetExtension(fullFileName);
+        OnPropertyChanged(nameof(FileExtension));
+        OnPropertyChanged(nameof(FullFileName));
+
         SongName = _track.Title;
         Artist = _track.Artist;
         AlbumTitle = _track.Album;
         Year = _track.Year ?? 0;
+        AlbumCover = GetAlbumCover(_track);
+    }
+
+    private static BitmapImage? GetAlbumCover(Track track)
+    {
+        var pictures = track.Tag.Pictures;
+        if (pictures == null || pictures.Length == 0)
+            return null;
+
+        var picture = pictures[0];
+        var imageData = picture.Data.Data;
+
+        var bitmap = new BitmapImage();
+        using var stream = new MemoryStream(imageData);
+        bitmap.SetSource(stream.AsRandomAccessStream());
+        return bitmap;
     }
 
     private void OnClick()

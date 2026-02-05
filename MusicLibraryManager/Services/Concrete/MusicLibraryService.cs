@@ -90,7 +90,7 @@ public class MusicLibraryService : IMusicLibraryService
                     };
                     tagFile.Tag.Pictures = [picture];
                 }
-                else if (tagFile.Tag.Pictures.Length > 0)
+                else if (updateInfo.RemoveAlbumCover)
                 {
                     tagFile.Tag.Pictures = [];
                 }

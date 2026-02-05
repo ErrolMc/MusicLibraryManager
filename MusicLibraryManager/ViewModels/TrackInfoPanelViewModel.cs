@@ -197,7 +197,8 @@ public partial class TrackInfoPanelViewModel : ObservableObject
             Year: Year != _originalYear ? yearValue : null,
             TrackNumber: Track != _originalTrack ? trackValue : null,
             AlbumCoverData: _albumCoverChanged ? _newAlbumCoverData : null,
-            AlbumCoverMimeType: _albumCoverChanged ? _newAlbumCoverMimeType : null
+            AlbumCoverMimeType: _albumCoverChanged ? _newAlbumCoverMimeType : null,
+            RemoveAlbumCover: _albumCoverChanged && _newAlbumCoverData == null
         );
 
         var success = await _musicLibraryService.UpdateTrackAsync(_currentTrack, updateInfo);
