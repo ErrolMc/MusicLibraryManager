@@ -1,5 +1,4 @@
 using System.Net.Http.Json;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using NAudio.Wave;
 
@@ -13,7 +12,7 @@ public class SoundCloudPlaybackService : ISoundCloudPlaybackService
     private readonly ISoundCloudAuthService _authService;
 
     private WaveOutEvent? _waveOut;
-    private StreamMediaFoundationReader? _mediaReader;
+    private WaveStream? _mediaReader;
     private MemoryStream? _audioStream;
     private long _currentTrackId;
 
@@ -44,7 +43,6 @@ public class SoundCloudPlaybackService : ISoundCloudPlaybackService
 
     public async Task LoadAndPlayAsync(long trackId)
     {
-        // Stop any current playback
         Stop();
 
         _currentTrackId = trackId;
@@ -53,19 +51,32 @@ public class SoundCloudPlaybackService : ISoundCloudPlaybackService
         if (string.IsNullOrEmpty(streamUrl))
             return;
 
-        // Download via HttpClient to avoid MediaFoundation COM/URL access issues
+        // Download via HttpClient to avoid MediaFoundation URL access restrictions.
         var accessToken = await _authService.GetAccessTokenAsync();
-        if (accessToken is null)
-            return;
-
         using var httpClient = _httpClientFactory.CreateClient();
         var request = new HttpRequestMessage(HttpMethod.Get, streamUrl);
         request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("OAuth", accessToken);
         var response = await httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
         var audioData = await response.Content.ReadAsByteArrayAsync();
+
         _audioStream = new MemoryStream(audioData);
         _mediaReader = new StreamMediaFoundationReader(_audioStream);
+
+        _waveOut = new WaveOutEvent();
+        _waveOut.Init(_mediaReader);
+        _waveOut.PlaybackStopped += OnPlaybackStopped;
+        _waveOut.Play();
+
+        PlaybackStateChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    public async Task LoadAsync(string source)
+    {
+        Stop();
+
+        // For local file paths, MediaFoundationReader works directly.
+        _mediaReader = await Task.Run(() => new MediaFoundationReader(source));
 
         _waveOut = new WaveOutEvent();
         _waveOut.Init(_mediaReader);

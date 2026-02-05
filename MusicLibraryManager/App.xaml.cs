@@ -96,6 +96,7 @@ public partial class App : Application
                     services.AddSingleton<ISoundCloudAuthService, SoundCloudAuthService>();
                     services.AddSingleton<ISoundCloudService, SoundCloudService>();
                     services.AddSingleton<ISoundCloudPlaybackService, SoundCloudPlaybackService>();
+                    services.AddSingleton<IPlaybackService, PlaybackService>();
 
                     services.AddSingleton<TrackListPanelViewModel>();
                     services.AddSingleton<MenuBarViewModel>();

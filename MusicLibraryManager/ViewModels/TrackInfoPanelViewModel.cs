@@ -1,8 +1,6 @@
 using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml.Media.Imaging;
 using MusicLibraryManager.Services;
-using Windows.Media.Core;
-using Windows.Media.Playback;
 using Windows.Storage.Pickers;
 
 namespace MusicLibraryManager.ViewModels;
@@ -75,13 +73,13 @@ public partial class TrackInfoPanelViewModel : ObservableObject
     [ObservableProperty]
     private bool hasTrackLoaded;
 
-    [ObservableProperty]
-    private IMediaPlaybackSource? trackMediaSource;
+    public PlaybackViewModel Playback { get; }
 
-    public TrackInfoPanelViewModel(IMusicLibraryService musicLibraryService, IImageService imageService)
+    public TrackInfoPanelViewModel(IMusicLibraryService musicLibraryService, IImageService imageService, IPlaybackService playbackService)
     {
         _musicLibraryService = musicLibraryService;
         _imageService = imageService;
+        Playback = new PlaybackViewModel(playbackService);
     }
 
     partial void OnFileNameWithoutExtensionChanged(string? value) => UpdateHasChanges();
@@ -155,9 +153,10 @@ public partial class TrackInfoPanelViewModel : ObservableObject
         _newAlbumCoverMimeType = null;
         _albumCoverChanged = false;
 
-        // Set media source for playback
-        (TrackMediaSource as IDisposable)?.Dispose();
-        TrackMediaSource = MediaSource.CreateFromUri(new Uri(track.FilePath));
+        // Set up playback for local file
+        Playback.Reset();
+        var filePath = track.FilePath;
+        Playback.LoadRequestedAsync = () => Playback.LoadAsync(filePath);
 
         HasTrackLoaded = true;
         HasChanges = false;

@@ -1,0 +1,101 @@
+﻿<UserControl x:Class="MusicLibraryManager.Presentation.PlaybackView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicLibraryManager.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:PlaybackViewModel}">
+
+    <Border Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"
+            CornerRadius="16"
+            Padding="16"
+            Margin="0,8,0,8">
+
+        <StackPanel Spacing="4">
+            <TextBlock Text="Playback"
+                   Style="{StaticResource CaptionTextBlockStyle}"
+                   Opacity="0.7" />
+
+            <!-- Transport buttons -->
+            <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Left"
+                    Spacing="4">
+                <Button Command="{Binding PlayPauseCommand}"
+                    Width="40" Height="40"
+                    CornerRadius="20"
+                    Padding="0">
+                    <Grid>
+                        <FontIcon Glyph="&#xE768;"
+                              FontSize="18"
+                              Visibility="{Binding IsPlaying, Converter={StaticResource TrueToCollapsedConverter}}" />
+                        <FontIcon Glyph="&#xE769;"
+                              FontSize="18"
+                              Visibility="{Binding IsPlaying}" />
+                    </Grid>
+                </Button>
+                <Button Command="{Binding StopPlaybackCommand}"
+                    Width="36" Height="36"
+                    CornerRadius="18"
+                    Padding="0">
+                    <FontIcon Glyph="&#xE71A;"
+                          FontSize="14" />
+                </Button>
+            </StackPanel>
+
+            <!-- Loading indicator -->
+            <ProgressBar IsIndeterminate="True"
+                     Visibility="{Binding IsLoading}"
+                     Margin="0,2" />
+
+            <!-- Seek slider with time labels -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                       Text="{Binding PositionText}"
+                       Style="{StaticResource CaptionTextBlockStyle}"
+                       Opacity="0.7"
+                       VerticalAlignment="Center"
+                       Margin="0,0,6,0" />
+                <Slider Grid.Column="1"
+                    x:Name="SeekSlider"
+                    Minimum="0"
+                    Maximum="{Binding PlaybackDuration}"
+                    Value="{Binding PlaybackPosition, Mode=TwoWay}"
+                    VerticalAlignment="Center"
+                    PointerPressed="SeekSlider_PointerPressed"
+                    PointerReleased="SeekSlider_PointerReleased"
+                    PointerCaptureLost="SeekSlider_PointerCaptureLost" />
+                <TextBlock Grid.Column="2"
+                       Text="{Binding DurationText}"
+                       Style="{StaticResource CaptionTextBlockStyle}"
+                       Opacity="0.7"
+                       VerticalAlignment="Center"
+                       Margin="6,0,0,0" />
+            </Grid>
+
+            <!-- Volume -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <FontIcon Grid.Column="0"
+                      Glyph="&#xE767;"
+                      FontSize="14"
+                      Opacity="0.7"
+                      VerticalAlignment="Center"
+                      Margin="0,0,6,0" />
+                <Slider Grid.Column="1"
+                    Minimum="0"
+                    Maximum="100"
+                    Value="{Binding Volume, Mode=TwoWay}"
+                    VerticalAlignment="Center" />
+            </Grid>
+        </StackPanel>
+    </Border>
+</UserControl>
