@@ -96,6 +96,14 @@ Both are backed by NAudio's `MediaFoundationReader` (supports local file paths a
 
 The shell hosts a `MenuBar` for navigation and an overlay system for loading/confirmation states. The main content is a resizable split-panel layout — track list on the left, detail/editor panel on the right. Local and SoundCloud views each have their own split-panel page, sharing the same playback controls component (`PlaybackView`).
 
+## Screenshots
+
+#### Main panel where you can load local folders and edit music tag data
+<img width="1286" height="1129" alt="image" src="https://github.com/user-attachments/assets/6370415d-e3e9-4728-a39e-5734448dc590" />
+
+#### Soundcloud panel where you can search soundcloud and copy over data to the main panel
+<img width="1086" height="815" alt="image" src="https://github.com/user-attachments/assets/3b345a47-70cd-4b81-981b-c6ed4db6837e" />
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE) with the [Commons Clause](https://commonsclause.com/) condition. You are free to use, fork, and contribute, but you may not sell the software or forks of it without permission. See the [LICENSE](LICENSE) file for details.
