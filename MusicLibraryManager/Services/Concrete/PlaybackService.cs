@@ -30,17 +30,24 @@ public class PlaybackService : IPlaybackService
     {
         Stop();
 
-        // MediaFoundationReader handles both file paths and HTTP URLs,
-        // streaming from the network when given a URL.
-        // Constructor may block while buffering, so run on background thread.
-        _mediaReader = await Task.Run(() => new MediaFoundationReader(source));
+        try
+        {
+            // MediaFoundationReader handles both file paths and HTTP URLs,
+            // streaming from the network when given a URL.
+            // Constructor may block while buffering, so run on background thread.
+            _mediaReader = await Task.Run(() => new MediaFoundationReader(source));
 
-        _waveOut = new WaveOutEvent();
-        _waveOut.Init(_mediaReader);
-        _waveOut.PlaybackStopped += OnPlaybackStopped;
-        _waveOut.Play();
+            _waveOut = new WaveOutEvent();
+            _waveOut.Init(_mediaReader);
+            _waveOut.PlaybackStopped += OnPlaybackStopped;
+            _waveOut.Play();
 
-        PlaybackStateChanged?.Invoke(this, EventArgs.Empty);
+            PlaybackStateChanged?.Invoke(this, EventArgs.Empty);
+        }
+        catch (Exception e)
+        {
+            System.Diagnostics.Debug.WriteLine("Failed to load audio source: " + source);
+        }
     }
 
     public void Play()

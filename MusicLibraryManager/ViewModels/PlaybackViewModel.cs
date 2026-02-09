@@ -83,6 +83,7 @@ public partial class PlaybackViewModel : ObservableObject
     public void SyncAfterLoad()
     {
         IsLoaded = _playbackService.IsLoaded;
+        IsPlaying = _playbackService.IsPlaying;
 
         if (IsLoaded)
         {
