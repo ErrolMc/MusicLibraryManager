@@ -36,7 +36,7 @@ A cross-platform desktop music library manager built with [Uno Platform](https:/
 ## Getting Started
 
 ```bash
-git clone https://github.com/<your-username>/MusicLibraryManager.git
+git clone https://github.com/ErrolMc/MusicLibraryManager.git
 cd MusicLibraryManager
 
 dotnet restore
