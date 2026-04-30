@@ -41,6 +41,7 @@
   <ItemGroup>
     <PackageReference Include="NAudio" />
     <PackageReference Include="TagLibSharp" />
+    <PackageReference Include="Tmds.DBus.Protocol" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Presentation\SplitPanelPage.xaml">
@@ -57,5 +58,19 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-
+  <ItemGroup>
+    <Page Update="Presentation\SyncPlaylistPanelPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Presentation\HomePanelPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Presentation\SoundCloud\SoundCloudTrackListPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
 </Project>

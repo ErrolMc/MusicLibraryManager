@@ -1,15 +1,10 @@
 {
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:8080",
-      "sslPort": 0
-    }
-  },
   "profiles": {
     "MusicLibraryManager (Desktop)": {
       "commandName": "Project",
+      "environmentVariables": {
+        "OPENAI_API_KEY": ""
+      },
       "compatibleTargetFramework": "desktop"
     },
     "MusicLibraryManager (Desktop WSL2)": {
@@ -17,6 +12,14 @@
       "commandLineArgs": "{ProjectDir}/bin/Debug/net10.0-desktop/MusicLibraryManager.dll",
       "distributionName": "",
       "compatibleTargetFramework": "desktop"
+    }
+  },
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:8080",
+      "sslPort": 0
     }
   }
 }

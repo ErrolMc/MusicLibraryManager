@@ -27,6 +27,7 @@ HorizontalContentAlignment="Stretch">
     </Border.ContextFlyout>
     <Grid VerticalAlignment="Center">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="36" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="{Binding Parent.FileNameColumnWidth}" MinWidth="80" />
             <ColumnDefinition Width="Auto" />
@@ -37,8 +38,14 @@ HorizontalContentAlignment="Stretch">
             <ColumnDefinition Width="{Binding Parent.YearColumnWidth}" MinWidth="50" />
         </Grid.ColumnDefinitions>
 
+        <TextBlock Grid.Column="0"
+                   Text="{Binding DisplayIndex}"
+                   Style="{StaticResource CaptionTextBlockStyle}"
+                   Opacity="0.7"
+                   VerticalAlignment="Center" />
+
         <!-- Album Art Thumbnail -->
-        <Border Grid.Column="0"
+        <Border Grid.Column="1"
                 Width="36"
                 Height="36"
                 CornerRadius="4"
@@ -56,7 +63,7 @@ HorizontalContentAlignment="Stretch">
         </Border>
 
         <!-- Filename -->
-        <TextBlock Grid.Column="1"
+        <TextBlock Grid.Column="2"
                    Text="{Binding FullFileName}"
                    Style="{StaticResource CaptionTextBlockStyle}"
                    Opacity="0.7"
@@ -65,10 +72,10 @@ HorizontalContentAlignment="Stretch">
                    MaxLines="1" />
 
         <!-- Splitter placeholder -->
-        <Border Grid.Column="2" Width="16" />
+        <Border Grid.Column="3" Width="16" />
 
         <!-- Song Name -->
-        <TextBlock Grid.Column="3"
+        <TextBlock Grid.Column="4"
                    Text="{Binding SongName}"
                    Style="{StaticResource BodyStrongTextBlockStyle}"
                    TextTrimming="Clip"
@@ -76,10 +83,10 @@ HorizontalContentAlignment="Stretch">
                    MaxLines="1" />
 
         <!-- Splitter placeholder -->
-        <Border Grid.Column="4" Width="16" />
+        <Border Grid.Column="5" Width="16" />
 
         <!-- Artist -->
-        <TextBlock Grid.Column="5"
+        <TextBlock Grid.Column="6"
                    Text="{Binding Artist}"
                    Style="{StaticResource CaptionTextBlockStyle}"
                    Opacity="0.7"
@@ -88,10 +95,10 @@ HorizontalContentAlignment="Stretch">
                    MaxLines="1" />
 
         <!-- Splitter placeholder -->
-        <Border Grid.Column="6" Width="16" />
+        <Border Grid.Column="7" Width="16" />
 
         <!-- Year -->
-        <TextBlock Grid.Column="7"
+        <TextBlock Grid.Column="8"
                    Text="{Binding Year}"
                    Style="{StaticResource CaptionTextBlockStyle}"
                    Opacity="0.5" />

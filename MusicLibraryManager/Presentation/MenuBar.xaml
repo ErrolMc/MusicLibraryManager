@@ -1,7 +1,9 @@
 ﻿<UserControl x:Class="MusicLibraryManager.Presentation.MenuBar"
+x:Name="MenuBarRoot"
 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 xmlns:vm="using:MusicLibraryManager.ViewModels"
+xmlns:uen="using:Uno.Extensions.Navigation.UI"
 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 mc:Ignorable="d"
@@ -20,6 +22,7 @@ d:DataContext="{d:DesignInstance Type=vm:MenuBarViewModel}">
                     Orientation="Horizontal"
                     Spacing="4">
             <Button Command="{Binding OpenCommand}"
+                    Visibility="{Binding ShowOpenButton, ElementName=MenuBarRoot, Converter={StaticResource TrueToVisibleConverter}}"
                     Style="{StaticResource FilledTonalButtonStyle}"
                     ToolTipService.ToolTip="Open">
                 <StackPanel Orientation="Horizontal" Spacing="8">
@@ -33,6 +36,24 @@ d:DataContext="{d:DesignInstance Type=vm:MenuBarViewModel}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon Glyph="&#xE753;" FontSize="16" />
                     <TextBlock Text="SoundCloud" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button uen:Navigation.Request="../SyncPlaylist"
+                    Visibility="{Binding ShowSyncPlaylistButton, ElementName=MenuBarRoot, Converter={StaticResource TrueToVisibleConverter}}"
+                    Style="{StaticResource FilledTonalButtonStyle}"
+                    ToolTipService.ToolTip="Sync Playlist">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Glyph="&#xE895;" FontSize="16" />
+                    <TextBlock Text="Sync Playlist" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button uen:Navigation.Request="../MainPanel"
+                    Visibility="{Binding ShowMainPanelButton, ElementName=MenuBarRoot, Converter={StaticResource TrueToVisibleConverter}}"
+                    Style="{StaticResource FilledTonalButtonStyle}"
+                    ToolTipService.ToolTip="Main Panel">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Glyph="&#xE80F;" FontSize="16" />
+                    <TextBlock Text="Main Panel" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
         </StackPanel>

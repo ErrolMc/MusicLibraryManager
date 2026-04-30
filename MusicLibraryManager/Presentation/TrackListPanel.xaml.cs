@@ -1,6 +1,8 @@
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using MusicLibraryManager.ViewModels;
 
 namespace MusicLibraryManager.Presentation;
@@ -17,10 +19,57 @@ public sealed partial class TrackListPanel : UserControl
     private const double MinYearWidth = 50;
     private const double SplitterWidth = 16;
     private const double Padding = 56; // Border padding + margins
+    private ScrollViewer? _listScrollViewer;
+
+    public event EventHandler<double>? VerticalOffsetChanged;
+    public double ScrollableHeight => _listScrollViewer?.ScrollableHeight ?? 0;
 
     public TrackListPanel()
     {
         this.InitializeComponent();
+        this.Loaded += TrackListPanel_Loaded;
+    }
+
+    private void TrackListPanel_Loaded(object sender, RoutedEventArgs e)
+    {
+        _listScrollViewer = FindDescendantScrollViewer(TracksListView);
+        if (_listScrollViewer is not null)
+        {
+            _listScrollViewer.ViewChanged += ListScrollViewer_ViewChanged;
+        }
+    }
+
+    private void ListScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+    {
+        if (_listScrollViewer is not null)
+        {
+            VerticalOffsetChanged?.Invoke(this, _listScrollViewer.VerticalOffset);
+        }
+    }
+
+    public void SetVerticalOffset(double offset)
+    {
+        _listScrollViewer?.ChangeView(null, offset, null, disableAnimation: true);
+    }
+
+    private static ScrollViewer? FindDescendantScrollViewer(DependencyObject root)
+    {
+        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(root); i++)
+        {
+            var child = VisualTreeHelper.GetChild(root, i);
+            if (child is ScrollViewer scrollViewer)
+            {
+                return scrollViewer;
+            }
+
+            var nested = FindDescendantScrollViewer(child);
+            if (nested is not null)
+            {
+                return nested;
+            }
+        }
+
+        return null;
     }
 
     private TrackListPanelViewModel? ViewModel => DataContext as TrackListPanelViewModel;

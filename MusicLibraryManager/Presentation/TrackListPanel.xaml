@@ -37,6 +37,7 @@
                     Margin="0,0,0,4">
                 <Grid>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="36" />
                         <ColumnDefinition Width="48" />
                         <ColumnDefinition Width="{Binding FileNameColumnWidth, Mode=TwoWay}" MinWidth="80" />
                         <ColumnDefinition Width="Auto" />
@@ -47,13 +48,23 @@
                         <ColumnDefinition Width="{Binding YearColumnWidth, Mode=TwoWay}" MinWidth="50" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="1"
+                    <TextBlock Grid.Column="0"
+                               Text="#"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               FontWeight="SemiBold"
+                               Opacity="0.7"
+                               VerticalAlignment="Center" />
+
+                    <TextBlock Grid.Column="2"
                                Text="Filename"
                                Style="{StaticResource CaptionTextBlockStyle}"
                                FontWeight="SemiBold"
-                               Opacity="0.7" />
+                               Opacity="0.7"
+                               TextWrapping="NoWrap"
+                               TextTrimming="CharacterEllipsis"
+                               MaxLines="1" />
 
-                    <Border Grid.Column="2"
+                    <Border Grid.Column="3"
                             x:Name="FileNameSplitter"
                             Width="8"
                             Background="Transparent"
@@ -70,13 +81,16 @@
                                    HorizontalAlignment="Center" />
                     </Border>
 
-                    <TextBlock Grid.Column="3"
+                    <TextBlock Grid.Column="4"
                                Text="Title"
                                Style="{StaticResource CaptionTextBlockStyle}"
                                FontWeight="SemiBold"
-                               Opacity="0.7" />
+                               Opacity="0.7"
+                               TextWrapping="NoWrap"
+                               TextTrimming="CharacterEllipsis"
+                               MaxLines="1" />
 
-                    <Border Grid.Column="4"
+                    <Border Grid.Column="5"
                             x:Name="ArtistSplitter"
                             Width="8"
                             Background="Transparent"
@@ -93,13 +107,16 @@
                                    HorizontalAlignment="Center" />
                     </Border>
 
-                    <TextBlock Grid.Column="5"
+                    <TextBlock Grid.Column="6"
                                Text="Artist"
                                Style="{StaticResource CaptionTextBlockStyle}"
                                FontWeight="SemiBold"
-                               Opacity="0.7" />
+                               Opacity="0.7"
+                               TextWrapping="NoWrap"
+                               TextTrimming="CharacterEllipsis"
+                               MaxLines="1" />
 
-                    <Border Grid.Column="6"
+                    <Border Grid.Column="7"
                             x:Name="YearSplitter"
                             Width="8"
                             Background="Transparent"
@@ -116,16 +133,20 @@
                                    HorizontalAlignment="Center" />
                     </Border>
 
-                    <TextBlock Grid.Column="7"
+                    <TextBlock Grid.Column="8"
                                Text="Year"
                                Style="{StaticResource CaptionTextBlockStyle}"
                                FontWeight="SemiBold"
-                               Opacity="0.7" />
+                               Opacity="0.7"
+                               TextWrapping="NoWrap"
+                               TextTrimming="CharacterEllipsis"
+                               MaxLines="1" />
                 </Grid>
             </Border>
 
             <!-- Track List -->
             <ListView Grid.Row="2"
+                      x:Name="TracksListView"
                       ItemsSource="{Binding Tracks}"
                       SelectionMode="None"
                       IsItemClickEnabled="False"

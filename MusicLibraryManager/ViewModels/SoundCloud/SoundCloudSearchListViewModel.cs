@@ -1,12 +1,19 @@
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml.Media.Imaging;
+using MusicLibraryManager.Models;
 using MusicLibraryManager.Services;
 
 namespace MusicLibraryManager.ViewModels.SoundCloud;
 
 public partial class SoundCloudSearchListViewModel : ObservableObject
 {
+    [ObservableProperty]
+    private long? selectedPlaylistId;
+
+    [ObservableProperty]
+    private string? selectedPlaylistTitle = "Select SoundCloud Playlist";
+
     [ObservableProperty]
     private string title = "SoundCloud Search";
 
@@ -24,14 +31,17 @@ public partial class SoundCloudSearchListViewModel : ObservableObject
 
     private readonly SoundCloudTrackInfoPanelViewModel _trackInfoPanel;
     private readonly ISoundCloudService _soundCloudService;
+    private readonly ITrackMatchingService _trackMatchingService;
     private SoundCloudSearchItemViewModel? _selectedItem;
 
     public SoundCloudSearchListViewModel(
         SoundCloudTrackInfoPanelViewModel trackInfoPanelViewModel,
-        ISoundCloudService soundCloudService)
+        ISoundCloudService soundCloudService,
+        ITrackMatchingService trackMatchingService)
     {
         _trackInfoPanel = trackInfoPanelViewModel;
         _soundCloudService = soundCloudService;
+        _trackMatchingService = trackMatchingService;
     }
 
     [RelayCommand]
@@ -49,24 +59,35 @@ public partial class SoundCloudSearchListViewModel : ObservableObject
 
             foreach (var track in tracks)
             {
-                var item = new SoundCloudSearchItemViewModel(OnSelectItem)
-                {
-                    Title = track.Title,
-                    Artist = track.Artist,
-                    Genre = track.Genre,
-                    Duration = track.FormattedDuration,
-                    Year = track.Year,
-                    TrackUrl = track.PermalinkUrl,
-                    TrackId = track.Id,
-                    Album = null // SoundCloud doesn't have albums
-                };
+                SearchResults.Add(CreateItem(track));
+            }
+        }
+        finally
+        {
+            IsSearching = false;
+            HasResults = SearchResults.Count > 0;
+        }
+    }
 
-                // Load artwork asynchronously
-                if (!string.IsNullOrEmpty(track.ArtworkUrl))
-                {
-                    _ = LoadArtworkAsync(item, track.ArtworkUrl);
-                }
+    public async Task AlignWithLocalTracksAsync(
+        IReadOnlyList<TrackListItemViewModel> localTracks,
+        IReadOnlyList<SoundCloudTrack> soundCloudTracks)
+    {
+        IsSearching = true;
+        SearchResults.Clear();
 
+        try
+        {
+            if (soundCloudTracks.Count == 0)
+            {
+                HasResults = false;
+                return;
+            }
+
+            var candidateItems = soundCloudTracks.Select(CreateItem).ToList();
+            var aligned = await _trackMatchingService.AlignAllTracksAsync(localTracks, candidateItems);
+            foreach (var item in aligned)
+            {
                 SearchResults.Add(item);
             }
         }
@@ -75,6 +96,48 @@ public partial class SoundCloudSearchListViewModel : ObservableObject
             IsSearching = false;
             HasResults = SearchResults.Count > 0;
         }
+    }
+
+    public async Task LoadPlaylistTracksAsync(IReadOnlyList<SoundCloudTrack> tracks)
+    {
+        IsSearching = true;
+        SearchResults.Clear();
+
+        try
+        {
+            foreach (var track in tracks)
+            {
+                SearchResults.Add(CreateItem(track));
+            }
+        }
+        finally
+        {
+            IsSearching = false;
+            HasResults = SearchResults.Count > 0;
+        }
+    }
+
+    private SoundCloudSearchItemViewModel CreateItem(SoundCloudTrack track)
+    {
+        var item = new SoundCloudSearchItemViewModel(OnSelectItem)
+        {
+            Title = track.Title,
+            Artist = track.Artist,
+            Genre = track.Genre,
+            Duration = track.FormattedDuration,
+            Year = track.Year,
+            TrackUrl = track.PermalinkUrl,
+            TrackId = track.Id,
+            Album = null,
+            IsGap = false
+        };
+
+        if (!string.IsNullOrEmpty(track.ArtworkUrl))
+        {
+            _ = LoadArtworkAsync(item, track.ArtworkUrl);
+        }
+
+        return item;
     }
 
     private static async Task LoadArtworkAsync(SoundCloudSearchItemViewModel item, string artworkUrl)

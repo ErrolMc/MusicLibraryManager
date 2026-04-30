@@ -76,6 +76,7 @@ public partial class App : Application
                     configBuilder
                         .EmbeddedSource<App>()
                         .Section<AppConfig>()
+                        .Section<OpenAiConfig>()
                         .Section<SoundCloudConfig>()
                 )
                 .UseHttp((context, services) =>
@@ -95,15 +96,19 @@ public partial class App : Application
                     services.AddHttpClient();
                     services.AddSingleton<ISoundCloudAuthService, SoundCloudAuthService>();
                     services.AddSingleton<ISoundCloudService, SoundCloudService>();
+                    services.AddHttpClient<ITrackMatchingService, OpenAiTrackMatchingService>();
                     services.AddSingleton<ISoundCloudPlaybackService, SoundCloudPlaybackService>();
                     services.AddSingleton<IPlaybackService, PlaybackService>();
 
                     services.AddSingleton<TrackListPanelViewModel>();
                     services.AddSingleton<MenuBarViewModel>();
                     services.AddSingleton<TrackInfoPanelViewModel>();
+                    services.AddSingleton<SyncPlaylistPanelViewModel>();
                     services.AddSingleton<SoundCloudTrackInfoPanelViewModel>();
                     services.AddSingleton<SoundCloudSearchListViewModel>();
+                    services.AddSingleton<SyncSoundCloudTrackListViewModel>();
                     services.AddSingleton<SoundCloudSplitPanelViewModel>();
+                    services.AddSingleton<SoundCloudPlaylistWindowViewModel>();
                     services.AddSingleton<SoundCloudSignInViewModel>();
                     services.AddSingleton<SoundCloudWindowViewModel>();
                 })
@@ -125,7 +130,9 @@ public partial class App : Application
     {
         views.Register(
             new ViewMap(ViewModel: typeof(ShellViewModel)),
+            new ViewMap<HomePanelPage, HomePanelViewModel>(),
             new ViewMap<SplitPanelPage, SplitPanelViewModel>(),
+            new ViewMap<SyncPlaylistPanelPage, SyncPlaylistPanelViewModel>(),
             new ViewMap<SoundCloudSplitPanelPage, SoundCloudSplitPanelViewModel>()
         );
 
@@ -133,7 +140,9 @@ public partial class App : Application
             new RouteMap("", View: views.FindByViewModel<ShellViewModel>(),
                 Nested:
                 [
-                    new ("SplitPanel", View: views.FindByViewModel<SplitPanelViewModel>(), IsDefault:true),
+                    new ("Home", View: views.FindByViewModel<HomePanelViewModel>(), IsDefault:true),
+                    new ("MainPanel", View: views.FindByViewModel<SplitPanelViewModel>()),
+                    new ("SyncPlaylist", View: views.FindByViewModel<SyncPlaylistPanelViewModel>()),
                     new ("SoundCloud", View: views.FindByViewModel<SoundCloudSplitPanelViewModel>()),
                 ]
             )

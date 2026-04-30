@@ -17,7 +17,11 @@ d:DataContext="{d:DesignInstance Type=vm:SplitPanelViewModel}">
         </Grid.RowDefinitions>
 
         <!-- Top Menu Bar -->
-        <views:MenuBar Grid.Row="0" DataContext="{Binding MenuBarViewModel}" />
+        <views:MenuBar Grid.Row="0"
+                       DataContext="{Binding MenuBarViewModel}"
+                       ShowOpenButton="True"
+                       ShowSyncPlaylistButton="True"
+                       ShowMainPanelButton="False" />
 
         <!-- Resizable Split Panel Content -->
         <Grid Grid.Row="1"
@@ -29,7 +33,8 @@ d:DataContext="{d:DesignInstance Type=vm:SplitPanelViewModel}">
             </Grid.ColumnDefinitions>
 
             <!-- Left Panel -->
-            <views:TrackInfoPanel Grid.Column="0" DataContext="{Binding TrackInfoPanelViewModel}"/>
+            <views:TrackInfoPanel Grid.Column="0"
+                                  DataContext="{Binding TrackInfoPanelViewModel}"/>
 
             <!-- Resizable Splitter / Grip -->
             <Border Grid.Column="1"

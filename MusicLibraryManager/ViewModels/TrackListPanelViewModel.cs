@@ -42,9 +42,11 @@ public partial class TrackListPanelViewModel : ObservableObject
 
         FolderPath = folderPath;
         Tracks.Clear();
+        var index = 1;
         foreach (Track track in tracks)
         {
-            Tracks.Add(new TrackListItemViewModel(track, OnSelectTrack, this));
+            Tracks.Add(new TrackListItemViewModel(track, OnSelectTrack, this, index));
+            index++;
         }
     }
 

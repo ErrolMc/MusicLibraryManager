@@ -89,4 +89,4 @@ public partial class MenuBarViewModel : ObservableObject
         _soundCloudWindow.Activate();
     }
 
-    }
+}

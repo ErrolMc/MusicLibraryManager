@@ -6,6 +6,9 @@ namespace MusicLibraryManager.ViewModels;
 public partial class TrackListItemViewModel : ObservableObject
 {
     [ObservableProperty]
+    private int displayIndex;
+
+    [ObservableProperty]
     private string fileNameWithoutExtension = string.Empty;
 
     private string _fileExtension = string.Empty;
@@ -40,7 +43,7 @@ public partial class TrackListItemViewModel : ObservableObject
     public ICommand CopyFileNameAndArtistCommand { get; }
     public ICommand CopyTitleAndArtistCommand { get; }
 
-    public TrackListItemViewModel(Track track, Action<TrackListItemViewModel> onClickAction, TrackListPanelViewModel parent)
+    public TrackListItemViewModel(Track track, Action<TrackListItemViewModel> onClickAction, TrackListPanelViewModel parent, int displayIndex)
     {
         var fullFileName = Path.GetFileName(track.FilePath);
         FileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullFileName);
@@ -49,6 +52,7 @@ public partial class TrackListItemViewModel : ObservableObject
         _track = track;
         _onClickAction = onClickAction;
         Parent = parent;
+        DisplayIndex = displayIndex;
 
         PopulateInfo();
 

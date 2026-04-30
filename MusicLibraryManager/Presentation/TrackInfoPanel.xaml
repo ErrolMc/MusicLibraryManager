@@ -48,6 +48,7 @@
                             <TextBox Grid.Column="0"
                                  Text="{Binding FileNameWithoutExtension, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  PlaceholderText="Filename"
+                                 IsReadOnly="{Binding IsReadOnly, ElementName=TrackInfoPanelRoot}"
                                  MinHeight="24"
                                  Padding="0" />
                             <TextBlock Grid.Column="1"
@@ -66,6 +67,7 @@
                                Opacity="0.7" />
                         <TextBox Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              PlaceholderText="Title"
+                             IsReadOnly="{Binding IsReadOnly, ElementName=TrackInfoPanelRoot}"
                              HorizontalAlignment="Stretch"
                              MinHeight="24"
                              Padding="0" />
@@ -78,6 +80,7 @@
                                Opacity="0.7" />
                         <TextBox Text="{Binding Artist, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              PlaceholderText="Artist"
+                             IsReadOnly="{Binding IsReadOnly, ElementName=TrackInfoPanelRoot}"
                              HorizontalAlignment="Stretch"
                              MinHeight="24"
                              Padding="0" />
@@ -90,6 +93,7 @@
                                Opacity="0.7" />
                         <TextBox Text="{Binding Album, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              PlaceholderText="Album"
+                             IsReadOnly="{Binding IsReadOnly, ElementName=TrackInfoPanelRoot}"
                              HorizontalAlignment="Stretch"
                              MinHeight="24"
                              Padding="0" />
@@ -102,6 +106,7 @@
                                Opacity="0.7" />
                         <TextBox Text="{Binding AlbumArtist, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              PlaceholderText="Album Artist"
+                             IsReadOnly="{Binding IsReadOnly, ElementName=TrackInfoPanelRoot}"
                              HorizontalAlignment="Stretch"
                              MinHeight="24"
                              Padding="0" />
@@ -114,6 +119,7 @@
                                Opacity="0.7" />
                         <TextBox Text="{Binding Composer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              PlaceholderText="Composer"
+                             IsReadOnly="{Binding IsReadOnly, ElementName=TrackInfoPanelRoot}"
                              HorizontalAlignment="Stretch"
                              MinHeight="24"
                              Padding="0" />
@@ -126,6 +132,7 @@
                                Opacity="0.7" />
                         <TextBox Text="{Binding Genre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              PlaceholderText="Genre"
+                             IsReadOnly="{Binding IsReadOnly, ElementName=TrackInfoPanelRoot}"
                              HorizontalAlignment="Stretch"
                              MinHeight="24"
                              Padding="0" />
@@ -139,6 +146,7 @@
                                    Opacity="0.7" />
                             <TextBox Text="{Binding Track, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  PlaceholderText="#"
+                                 IsReadOnly="{Binding IsReadOnly, ElementName=TrackInfoPanelRoot}"
                                  Width="50"
                                  MinHeight="24"
                                  Padding="0" />
@@ -149,6 +157,7 @@
                                    Opacity="0.7" />
                             <TextBox Text="{Binding Year, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  PlaceholderText="Year"
+                                 IsReadOnly="{Binding IsReadOnly, ElementName=TrackInfoPanelRoot}"
                                  Width="60"
                                  MinHeight="24"
                                  Padding="0" />
@@ -162,6 +171,7 @@
                                Opacity="0.7" />
                         <TextBox Text="{Binding Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              PlaceholderText="Comment"
+                             IsReadOnly="{Binding IsReadOnly, ElementName=TrackInfoPanelRoot}"
                              HorizontalAlignment="Stretch"
                              TextWrapping="Wrap"
                              AcceptsReturn="True"
@@ -192,18 +202,21 @@
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutItem Text="Replace from Clipboard"
+                                                    Visibility="{Binding IsReadOnly, ElementName=TrackInfoPanelRoot, Converter={StaticResource TrueToCollapsedConverter}}"
                                                     Command="{Binding ReplaceAlbumCoverFromClipboardCommand}">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE77F;" />
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutItem Text="Change"
+                                                    Visibility="{Binding IsReadOnly, ElementName=TrackInfoPanelRoot, Converter={StaticResource TrueToCollapsedConverter}}"
                                                     Command="{Binding ChangeAlbumCoverCommand}">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE70F;" />
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutItem Text="Remove"
+                                                    Visibility="{Binding IsReadOnly, ElementName=TrackInfoPanelRoot, Converter={StaticResource TrueToCollapsedConverter}}"
                                                     Command="{Binding RemoveAlbumCoverCommand}">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE74D;" />
@@ -238,7 +251,7 @@
                 HorizontalAlignment="Right"
                 Spacing="8"
                 Margin="0,12,15,0"
-                Visibility="{Binding HasChanges}">
+                Visibility="{Binding IsReadOnly, ElementName=TrackInfoPanelRoot, Converter={StaticResource TrueToCollapsedConverter}}">
                 <Button Content="Cancel"
                         Click="CancelButton_Click"
                         Style="{StaticResource OutlinedButtonStyle}" />

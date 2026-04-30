@@ -5,6 +5,19 @@ namespace MusicLibraryManager.Presentation;
 
 public sealed partial class TrackInfoPanel : UserControl
 {
+    public static readonly DependencyProperty IsReadOnlyProperty =
+        DependencyProperty.Register(
+            nameof(IsReadOnly),
+            typeof(bool),
+            typeof(TrackInfoPanel),
+            new PropertyMetadata(false));
+
+    public bool IsReadOnly
+    {
+        get => (bool)GetValue(IsReadOnlyProperty);
+        set => SetValue(IsReadOnlyProperty, value);
+    }
+
     public TrackInfoPanel()
     {
         this.InitializeComponent();
@@ -14,11 +27,21 @@ public sealed partial class TrackInfoPanel : UserControl
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)
     {
+        if (IsReadOnly)
+        {
+            return;
+        }
+
         ViewModel?.CancelChanges();
     }
 
     private async void SaveButton_Click(object sender, RoutedEventArgs e)
     {
+        if (IsReadOnly)
+        {
+            return;
+        }
+
         if (ViewModel != null)
         {
             await ViewModel.SaveChangesAsync();
@@ -27,11 +50,21 @@ public sealed partial class TrackInfoPanel : UserControl
 
     private void AlbumCover_Tapped(object sender, TappedRoutedEventArgs e)
     {
+        if (IsReadOnly)
+        {
+            return;
+        }
+
         ViewModel?.ChangeAlbumCoverCommand.Execute(null);
     }
 
     private void AlbumCoverContextMenu_Opening(object sender, object e)
     {
+        if (IsReadOnly)
+        {
+            return;
+        }
+
         ViewModel?.RefreshClipboardState();
     }
 }

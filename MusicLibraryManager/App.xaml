@@ -24,6 +24,8 @@
 
       <!-- Converters -->
       <converters:TrueToCollapsedConverter x:Key="TrueToCollapsedConverter" />
+      <converters:TrueToVisibleConverter x:Key="TrueToVisibleConverter" />
+      <converters:UnmatchedBorderBrushConverter x:Key="UnmatchedBorderBrushConverter" />
 
     </ResourceDictionary>
   </Application.Resources>
