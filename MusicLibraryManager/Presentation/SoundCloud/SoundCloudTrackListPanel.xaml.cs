@@ -1,4 +1,5 @@
 using MusicLibraryManager.ViewModels.SoundCloud;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
@@ -100,6 +101,12 @@ public sealed partial class SoundCloudTrackListPanel : UserControl
 
     private void ManualPlaceholder_PointerPressed(object sender, PointerRoutedEventArgs e)
     {
+        if (TryHandlePopupPlaceholderModeSelectionFromSender(sender))
+        {
+            e.Handled = true;
+            return;
+        }
+
         if (sender is not Border border || border.DataContext is not SoundCloudSearchItemViewModel item || ViewModel is null)
         {
             return;
@@ -146,6 +153,12 @@ public sealed partial class SoundCloudTrackListPanel : UserControl
 
     private void ManualPlaceholder_RightTapped(object sender, RightTappedRoutedEventArgs e)
     {
+        if (TryHandlePopupPlaceholderModeRightTap())
+        {
+            e.Handled = true;
+            return;
+        }
+
         if (sender is not Border border || border.DataContext is not SoundCloudSearchItemViewModel item || ViewModel is null)
         {
             return;
@@ -244,6 +257,12 @@ public sealed partial class SoundCloudTrackListPanel : UserControl
 
     private void SearchItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
     {
+        if (TryHandlePopupPlaceholderModeRightTap())
+        {
+            e.Handled = true;
+            return;
+        }
+
         if (sender is not Border border || border.DataContext is not SoundCloudSearchItemViewModel item)
         {
             return;
@@ -266,6 +285,50 @@ public sealed partial class SoundCloudTrackListPanel : UserControl
         menuFlyout.Items.Add(removeItem);
         menuFlyout.ShowAt(border, e.GetPosition(border));
         e.Handled = true;
+    }
+
+    private void TracksListView_RightTapped(object sender, RightTappedRoutedEventArgs e)
+    {
+        if (TryHandlePopupPlaceholderModeRightTap())
+        {
+            e.Handled = true;
+        }
+    }
+
+    private bool TryHandlePopupPlaceholderModeSelectionFromSender(object sender)
+    {
+        if (sender is not Border border || border.DataContext is not SoundCloudSearchItemViewModel placeholder)
+        {
+            return false;
+        }
+
+        var popupTrackInfo = App.Instance.Services?.Services.GetService<PopupSoundCloudTrackInfoPanelViewModel>();
+        if (popupTrackInfo is null || !popupTrackInfo.IsPickPlaceholderMode)
+        {
+            return false;
+        }
+
+        if (!placeholder.IsManualPlaceholder)
+        {
+            return false;
+        }
+
+        _ = popupTrackInfo.TryApplyToPlaceholderAsync(placeholder.TrackId);
+        DragGhost.Visibility = Visibility.Collapsed;
+        this.ReleasePointerCaptures();
+        return true;
+    }
+
+    private bool TryHandlePopupPlaceholderModeRightTap()
+    {
+        var popupTrackInfo = App.Instance.Services?.Services.GetService<PopupSoundCloudTrackInfoPanelViewModel>();
+        if (popupTrackInfo is null || !popupTrackInfo.IsPickPlaceholderMode)
+        {
+            return false;
+        }
+
+        popupTrackInfo.CancelPlaceholderPickModeCommand.Execute(null);
+        return true;
     }
 
     private void ListScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)

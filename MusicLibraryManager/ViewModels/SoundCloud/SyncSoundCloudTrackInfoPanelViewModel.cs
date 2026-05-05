@@ -10,4 +10,9 @@ public sealed class SyncSoundCloudTrackInfoPanelViewModel : SoundCloudTrackInfoP
         : base(imageService, playbackService)
     {
     }
+
+    protected override void SyncToPlaceholder()
+    {
+        // Only popup panel supports syncing selected track to placeholders.
+    }
 }

@@ -1,8 +1,10 @@
 using Microsoft.UI.Input;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using MusicLibraryManager.Presentation.SoundCloud;
 using MusicLibraryManager.ViewModels;
+using MusicLibraryManager.ViewModels.SoundCloud;
 
 namespace MusicLibraryManager.Presentation;
 
@@ -22,6 +24,25 @@ public sealed partial class SyncPlaylistPanelPage : Page
     {
         this.InitializeComponent();
         this.Loaded += SyncPlaylistPanelPage_Loaded;
+    }
+
+    protected override void OnNavigatedTo(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+        if (App.Instance.Services?.Services.GetService(typeof(PopupSoundCloudTrackInfoPanelViewModel)) is PopupSoundCloudTrackInfoPanelViewModel popupVm)
+        {
+            popupVm.SetSyncPanelOpen(true);
+        }
+    }
+
+    protected override void OnNavigatedFrom(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
+    {
+        if (App.Instance.Services?.Services.GetService(typeof(PopupSoundCloudTrackInfoPanelViewModel)) is PopupSoundCloudTrackInfoPanelViewModel popupVm)
+        {
+            popupVm.SetSyncPanelOpen(false);
+        }
+
+        base.OnNavigatedFrom(e);
     }
 
     private void SyncPlaylistPanelPage_Loaded(object sender, RoutedEventArgs e)

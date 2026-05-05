@@ -7,8 +7,8 @@ public partial class SoundCloudTrackInfoPanelViewModel : ObservableObject
 {
     private readonly IImageService _imageService;
     private readonly ISoundCloudPlaybackService _playbackService;
-    private byte[]? _albumCoverData;
-    private long _currentTrackId;
+    protected byte[]? AlbumCoverData;
+    protected long CurrentTrackId;
 
     [ObservableProperty]
     private string? fileName;
@@ -48,6 +48,15 @@ public partial class SoundCloudTrackInfoPanelViewModel : ObservableObject
 
     [ObservableProperty]
     private bool hasTrackLoaded;
+
+    [ObservableProperty]
+    private bool isSyncToPlaceholderEnabled;
+
+    [ObservableProperty]
+    private bool isPickPlaceholderMode;
+
+    [ObservableProperty]
+    private string placeholderOverlayMessage = "click on placeholder or right click to cancel";
 
     public PlaybackViewModel Playback { get; }
 
@@ -90,15 +99,15 @@ public partial class SoundCloudTrackInfoPanelViewModel : ObservableObject
         Track = track;
         Duration = duration;
         AlbumCover = albumCover;
-        _albumCoverData = albumCoverData;
-        _currentTrackId = trackId;
+        AlbumCoverData = albumCoverData;
+        CurrentTrackId = trackId;
         HasTrackLoaded = true;
 
         // Set up lazy loading: when play is pressed, fetch the stream URL and stream it
         Playback.LoadRequestedAsync = async () =>
         {
-            if (_currentTrackId <= 0) return;
-            await _playbackService.LoadAndPlayAsync(_currentTrackId);
+            if (CurrentTrackId <= 0) return;
+            await _playbackService.LoadAndPlayAsync(CurrentTrackId);
             Playback.SyncAfterLoad();
         };
     }
@@ -120,16 +129,37 @@ public partial class SoundCloudTrackInfoPanelViewModel : ObservableObject
         Track = null;
         Duration = null;
         AlbumCover = null;
-        _albumCoverData = null;
-        _currentTrackId = 0;
+        AlbumCoverData = null;
+        CurrentTrackId = 0;
         HasTrackLoaded = false;
+        IsPickPlaceholderMode = false;
+    }
+
+    public void SetSyncPanelOpen(bool isOpen)
+    {
+        IsSyncToPlaceholderEnabled = isOpen;
+        if (!isOpen)
+        {
+            IsPickPlaceholderMode = false;
+        }
+    }
+
+    [RelayCommand]
+    protected virtual void SyncToPlaceholder()
+    {
+    }
+
+    [RelayCommand]
+    protected virtual void CancelPlaceholderPickMode()
+    {
+        IsPickPlaceholderMode = false;
     }
 
     [RelayCommand]
     private void CopyAlbumCover()
     {
-        if (_albumCoverData == null) return;
-        _imageService.CopyToClipboard(_albumCoverData);
+        if (AlbumCoverData == null) return;
+        _imageService.CopyToClipboard(AlbumCoverData);
     }
 
     [RelayCommand]

@@ -40,4 +40,12 @@ public interface ISoundCloudService
     /// <param name="trackId">Track id to remove.</param>
     /// <returns>True when update succeeds.</returns>
     Task<bool> RemoveTrackFromPlaylistAsync(long playlistId, long trackId);
+
+    /// <summary>
+    /// Replaces the full playlist order/content with the provided track ids.
+    /// </summary>
+    /// <param name="playlistId">Playlist id.</param>
+    /// <param name="trackIds">Final playlist track ids in target order.</param>
+    /// <returns>True when update succeeds.</returns>
+    Task<bool> ReplacePlaylistTracksAsync(long playlistId, IReadOnlyList<long> trackIds);
 }

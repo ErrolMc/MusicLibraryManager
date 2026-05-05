@@ -41,6 +41,7 @@ public partial class SyncSoundCloudTrackListViewModel : ObservableObject
     private readonly ISoundCloudService _soundCloudService;
     private SoundCloudSearchItemViewModel? _selectedItem;
     private SoundCloudSearchItemViewModel? _draggedItem;
+    private long _nextManualPlaceholderTrackId = -1;
 
     public SyncSoundCloudTrackListViewModel(
         SyncSoundCloudTrackInfoPanelViewModel trackInfoPanelViewModel,
@@ -293,6 +294,60 @@ public partial class SyncSoundCloudTrackListViewModel : ObservableObject
         DropTargetIndex = null;
     }
 
+    public bool TryReplacePlaceholderWithTrack(long placeholderTrackId, SoundCloudSearchItemViewModel sourceTrack)
+    {
+        if (sourceTrack is null || sourceTrack.TrackId <= 0)
+        {
+            return false;
+        }
+
+        var targetIndex = -1;
+        for (var i = 0; i < SearchResults.Count; i++)
+        {
+            var candidate = SearchResults[i];
+            if (candidate.IsManualPlaceholder && candidate.TrackId == placeholderTrackId)
+            {
+                targetIndex = i;
+                break;
+            }
+        }
+
+        if (targetIndex < 0)
+        {
+            return false;
+        }
+
+        var replacement = new SoundCloudSearchItemViewModel(OnSelectItem)
+        {
+            Title = sourceTrack.Title,
+            Artist = sourceTrack.Artist,
+            Album = sourceTrack.Album,
+            Year = sourceTrack.Year,
+            Genre = sourceTrack.Genre,
+            Duration = sourceTrack.Duration,
+            TrackUrl = sourceTrack.TrackUrl,
+            TrackId = sourceTrack.TrackId,
+            AlbumCover = sourceTrack.AlbumCover,
+            AlbumCoverData = sourceTrack.AlbumCoverData,
+            IsGap = false,
+            IsManualPlaceholder = false,
+            IsUnmatched = sourceTrack.IsUnmatched,
+            ItemOpacity = 1.0
+        };
+
+        SearchResults[targetIndex] = replacement;
+        ReindexDisplayRows();
+        return true;
+    }
+
+    public IReadOnlyList<long> GetPersistedPlaylistTrackIds()
+    {
+        return SearchResults
+            .Where(item => !item.IsManualPlaceholder && !item.IsGap && item.TrackId > 0)
+            .Select(item => item.TrackId)
+            .ToList();
+    }
+
     private void MoveDraggedItem(int targetIndex)
     {
         if (_draggedItem is null)
@@ -334,7 +389,7 @@ public partial class SyncSoundCloudTrackListViewModel : ObservableObject
             IsManualPlaceholder = true,
             IsGap = false,
             IsUnmatched = true,
-            TrackId = 0
+            TrackId = _nextManualPlaceholderTrackId--
         };
     }
 

@@ -219,6 +219,11 @@ public class SoundCloudService : ISoundCloudService
         }
     }
 
+    public async Task<bool> ReplacePlaylistTracksAsync(long playlistId, IReadOnlyList<long> trackIds)
+    {
+        return await UpdatePlaylistTracksAsync(playlistId, trackIds, mergeWithExisting: false);
+    }
+
     private async Task<bool> UpdatePlaylistTracksAsync(long playlistId, IReadOnlyList<long> trackIds, bool mergeWithExisting)
     {
 
