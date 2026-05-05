@@ -36,14 +36,14 @@ public partial class SyncSoundCloudTrackListViewModel : ObservableObject
     [ObservableProperty]
     private int? dropTargetIndex;
 
-    private readonly SoundCloudTrackInfoPanelViewModel _trackInfoPanel;
+    private readonly SyncSoundCloudTrackInfoPanelViewModel _trackInfoPanel;
     private readonly ITrackMatchingService _trackMatchingService;
     private readonly ISoundCloudService _soundCloudService;
     private SoundCloudSearchItemViewModel? _selectedItem;
     private SoundCloudSearchItemViewModel? _draggedItem;
 
     public SyncSoundCloudTrackListViewModel(
-        SoundCloudTrackInfoPanelViewModel trackInfoPanelViewModel,
+        SyncSoundCloudTrackInfoPanelViewModel trackInfoPanelViewModel,
         ITrackMatchingService trackMatchingService,
         ISoundCloudService soundCloudService)
     {

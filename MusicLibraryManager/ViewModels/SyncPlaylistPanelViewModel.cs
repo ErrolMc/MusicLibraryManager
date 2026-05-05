@@ -14,7 +14,7 @@ public partial class SyncPlaylistPanelViewModel : ObservableObject
     public TrackListPanelViewModel TrackListPanelViewModel { get; }
     public TrackInfoPanelViewModel TrackInfoPanelViewModel { get; }
     public SyncSoundCloudTrackListViewModel SyncSoundCloudTrackListViewModel { get; }
-    public SoundCloudTrackInfoPanelViewModel SoundCloudTrackInfoPanelViewModel { get; }
+    public SyncSoundCloudTrackInfoPanelViewModel SoundCloudTrackInfoPanelViewModel { get; }
 
     private readonly ISoundCloudService _soundCloudService;
     private readonly ISoundCloudAuthService _soundCloudAuthService;
@@ -72,7 +72,7 @@ public partial class SyncPlaylistPanelViewModel : ObservableObject
         TrackListPanelViewModel trackListPanelViewModel,
         TrackInfoPanelViewModel trackInfoPanelViewModel,
         SyncSoundCloudTrackListViewModel syncSoundCloudTrackListViewModel,
-        SoundCloudTrackInfoPanelViewModel soundCloudTrackInfoPanelViewModel,
+        SyncSoundCloudTrackInfoPanelViewModel soundCloudTrackInfoPanelViewModel,
         ISoundCloudService soundCloudService,
         ISoundCloudAuthService soundCloudAuthService,
         ITrackMatchingService trackMatchingService,

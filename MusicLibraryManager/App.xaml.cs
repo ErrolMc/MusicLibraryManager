@@ -104,7 +104,8 @@ public partial class App : Application
                     services.AddSingleton<MenuBarViewModel>();
                     services.AddSingleton<TrackInfoPanelViewModel>();
                     services.AddSingleton<SyncPlaylistPanelViewModel>();
-                    services.AddSingleton<SoundCloudTrackInfoPanelViewModel>();
+                    services.AddSingleton<PopupSoundCloudTrackInfoPanelViewModel>();
+                    services.AddSingleton<SyncSoundCloudTrackInfoPanelViewModel>();
                     services.AddSingleton<SoundCloudSearchListViewModel>();
                     services.AddSingleton<SyncSoundCloudTrackListViewModel>();
                     services.AddSingleton<SoundCloudSplitPanelViewModel>();

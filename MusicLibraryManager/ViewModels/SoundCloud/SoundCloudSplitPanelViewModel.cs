@@ -7,7 +7,7 @@ public partial class SoundCloudSplitPanelViewModel : ObservableObject
 
     public SoundCloudSplitPanelViewModel(
         SoundCloudSearchListViewModel soundCloudSearchListViewModel,
-        SoundCloudTrackInfoPanelViewModel soundCloudTrackInfoPanelViewModel)
+        PopupSoundCloudTrackInfoPanelViewModel soundCloudTrackInfoPanelViewModel)
     {
         SoundCloudSearchListViewModel = soundCloudSearchListViewModel;
         SoundCloudTrackInfoPanelViewModel = soundCloudTrackInfoPanelViewModel;

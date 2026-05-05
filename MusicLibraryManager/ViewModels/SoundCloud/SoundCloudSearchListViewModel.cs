@@ -29,13 +29,13 @@ public partial class SoundCloudSearchListViewModel : ObservableObject
     [ObservableProperty]
     private bool hasResults;
 
-    private readonly SoundCloudTrackInfoPanelViewModel _trackInfoPanel;
+    private readonly PopupSoundCloudTrackInfoPanelViewModel _trackInfoPanel;
     private readonly ISoundCloudService _soundCloudService;
     private readonly ITrackMatchingService _trackMatchingService;
     private SoundCloudSearchItemViewModel? _selectedItem;
 
     public SoundCloudSearchListViewModel(
-        SoundCloudTrackInfoPanelViewModel trackInfoPanelViewModel,
+        PopupSoundCloudTrackInfoPanelViewModel trackInfoPanelViewModel,
         ISoundCloudService soundCloudService,
         ITrackMatchingService trackMatchingService)
     {
