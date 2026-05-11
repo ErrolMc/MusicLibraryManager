@@ -31,7 +31,7 @@ public interface ISoundCloudService
     /// <param name="playlistId">Playlist id.</param>
     /// <param name="trackIds">Track ids to append.</param>
     /// <returns>True when update succeeds.</returns>
-    Task<bool> AppendTracksToPlaylistAsync(long playlistId, IReadOnlyList<long> trackIds);
+    Task<bool> AppendTracksToPlaylistAsync(long playlistId, IReadOnlyList<long> trackIds, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Removes a track from an existing SoundCloud playlist.
@@ -39,7 +39,7 @@ public interface ISoundCloudService
     /// <param name="playlistId">Playlist id.</param>
     /// <param name="trackId">Track id to remove.</param>
     /// <returns>True when update succeeds.</returns>
-    Task<bool> RemoveTrackFromPlaylistAsync(long playlistId, long trackId);
+    Task<bool> RemoveTrackFromPlaylistAsync(long playlistId, long trackId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Replaces the full playlist order/content with the provided track ids.
@@ -47,5 +47,5 @@ public interface ISoundCloudService
     /// <param name="playlistId">Playlist id.</param>
     /// <param name="trackIds">Final playlist track ids in target order.</param>
     /// <returns>True when update succeeds.</returns>
-    Task<bool> ReplacePlaylistTracksAsync(long playlistId, IReadOnlyList<long> trackIds);
+    Task<bool> ReplacePlaylistTracksAsync(long playlistId, IReadOnlyList<long> trackIds, CancellationToken cancellationToken = default);
 }

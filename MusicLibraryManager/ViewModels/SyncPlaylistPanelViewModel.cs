@@ -35,7 +35,7 @@ public partial class SyncPlaylistPanelViewModel : ObservableObject
     public string BusyOverlayMessage => IsSyncingToSoundCloud
         ? "Syncing local playlist to SoundCloud..."
         : SyncSoundCloudTrackListViewModel.IsUpdatingPlaylist
-            ? "Removing track from SoundCloud playlist..."
+            ? SyncSoundCloudTrackListViewModel.PlaylistUpdateMessage
             : "Matching tracks with AI model...";
 
     partial void OnSelectedPlaylistIdChanged(long? value)

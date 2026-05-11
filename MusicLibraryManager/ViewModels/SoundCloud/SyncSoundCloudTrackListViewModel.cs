@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Media.Imaging;
 using MusicLibraryManager.Models;
 using MusicLibraryManager.Services;
@@ -27,6 +28,14 @@ public partial class SyncSoundCloudTrackListViewModel : ObservableObject
     [ObservableProperty]
     private bool isUpdatingPlaylist;
 
+    private string _playlistUpdateMessage = "Updating SoundCloud playlist...";
+
+    public string PlaylistUpdateMessage
+    {
+        get => _playlistUpdateMessage;
+        set => SetProperty(ref _playlistUpdateMessage, value);
+    }
+
     [ObservableProperty]
     private bool isInsertPaletteDragging;
 
@@ -39,18 +48,22 @@ public partial class SyncSoundCloudTrackListViewModel : ObservableObject
     private readonly SyncSoundCloudTrackInfoPanelViewModel _trackInfoPanel;
     private readonly ITrackMatchingService _trackMatchingService;
     private readonly ISoundCloudService _soundCloudService;
+    private readonly ILogger<SyncSoundCloudTrackListViewModel> _logger;
     private SoundCloudSearchItemViewModel? _selectedItem;
     private SoundCloudSearchItemViewModel? _draggedItem;
     private long _nextManualPlaceholderTrackId = -1;
+    private CancellationTokenSource? _persistPlaylistCts;
 
     public SyncSoundCloudTrackListViewModel(
         SyncSoundCloudTrackInfoPanelViewModel trackInfoPanelViewModel,
         ITrackMatchingService trackMatchingService,
-        ISoundCloudService soundCloudService)
+        ISoundCloudService soundCloudService,
+        ILogger<SyncSoundCloudTrackListViewModel> logger)
     {
         _trackInfoPanel = trackInfoPanelViewModel;
         _trackMatchingService = trackMatchingService;
         _soundCloudService = soundCloudService;
+        _logger = logger;
     }
 
     public async Task AlignWithLocalTracksAsync(
@@ -184,6 +197,7 @@ public partial class SyncSoundCloudTrackListViewModel : ObservableObject
         }
 
         IsUpdatingPlaylist = true;
+        PlaylistUpdateMessage = "Removing track from SoundCloud playlist...";
         try
         {
             var removed = await _soundCloudService.RemoveTrackFromPlaylistAsync(SelectedPlaylistId.Value, item.TrackId);
@@ -198,6 +212,7 @@ public partial class SyncSoundCloudTrackListViewModel : ObservableObject
         finally
         {
             IsUpdatingPlaylist = false;
+            PlaylistUpdateMessage = "Updating SoundCloud playlist...";
         }
     }
 
@@ -262,6 +277,38 @@ public partial class SyncSoundCloudTrackListViewModel : ObservableObject
         IsNewInsertDragging = false;
         DropTargetIndex = null;
         _draggedItem = null;
+    }
+
+    public bool IsReorderCandidate(SoundCloudSearchItemViewModel item)
+    {
+        return item is not null && !item.IsGap && !item.IsManualPlaceholder;
+    }
+
+    public void BeginTrackReorderDrag(SoundCloudSearchItemViewModel item)
+    {
+        if (!IsReorderCandidate(item))
+        {
+            return;
+        }
+
+        _draggedItem = item;
+        _draggedItem.ItemOpacity = 0.45;
+        IsInsertPaletteDragging = true;
+        IsNewInsertDragging = false;
+        DropTargetIndex = SearchResults.IndexOf(item);
+    }
+
+    public async Task<bool> CompleteTrackReorderDragAsync()
+    {
+        var hadTrackDrag = _draggedItem is not null && !_draggedItem.IsManualPlaceholder;
+        EndInsertPaletteDrag();
+
+        if (!hadTrackDrag)
+        {
+            return true;
+        }
+
+        return await PersistCurrentPlaylistOrderAsync();
     }
 
     public void SetDropTargetIndex(int? index)
@@ -346,6 +393,55 @@ public partial class SyncSoundCloudTrackListViewModel : ObservableObject
             .Where(item => !item.IsManualPlaceholder && !item.IsGap && item.TrackId > 0)
             .Select(item => item.TrackId)
             .ToList();
+    }
+
+    public async Task<bool> PersistCurrentPlaylistOrderAsync()
+    {
+        if (SelectedPlaylistId is not long playlistId || playlistId <= 0)
+        {
+            return false;
+        }
+
+        var previousCts = _persistPlaylistCts;
+        var nextCts = new CancellationTokenSource();
+        _persistPlaylistCts = nextCts;
+        previousCts?.Cancel();
+        previousCts?.Dispose();
+        var token = nextCts.Token;
+
+        var persistedTrackIds = GetPersistedPlaylistTrackIds();
+        try
+        {
+            IsUpdatingPlaylist = true;
+            PlaylistUpdateMessage = "Updating SoundCloud playlist order...";
+            var persisted = await _soundCloudService.ReplacePlaylistTracksAsync(playlistId, persistedTrackIds, token);
+            if (!persisted)
+            {
+                return false;
+            }
+
+            _logger.LogInformation("[Sync] Persisted reordered SoundCloud playlist. PlaylistId={PlaylistId}, TrackCount={Count}", playlistId, persistedTrackIds.Count);
+            return true;
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("[Sync] Playlist reorder persist canceled. PlaylistId={PlaylistId}", playlistId);
+            return false;
+        }
+        finally
+        {
+            if (!ReferenceEquals(_persistPlaylistCts, nextCts))
+            {
+                // newer request owns the active CTS
+            }
+            else
+            {
+                nextCts.Dispose();
+                _persistPlaylistCts = null;
+                IsUpdatingPlaylist = false;
+                PlaylistUpdateMessage = "Updating SoundCloud playlist...";
+            }
+        }
     }
 
     private void MoveDraggedItem(int targetIndex)

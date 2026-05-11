@@ -6,19 +6,16 @@ namespace MusicLibraryManager.ViewModels.SoundCloud;
 public sealed class PopupSoundCloudTrackInfoPanelViewModel : SoundCloudTrackInfoPanelViewModel
 {
     private readonly SyncSoundCloudTrackListViewModel _syncSoundCloudTrackListViewModel;
-    private readonly ISoundCloudService _soundCloudService;
     private readonly ILogger<PopupSoundCloudTrackInfoPanelViewModel> _logger;
 
     public PopupSoundCloudTrackInfoPanelViewModel(
         IImageService imageService,
         ISoundCloudPlaybackService playbackService,
         SyncSoundCloudTrackListViewModel syncSoundCloudTrackListViewModel,
-        ISoundCloudService soundCloudService,
         ILogger<PopupSoundCloudTrackInfoPanelViewModel> logger)
         : base(imageService, playbackService)
     {
         _syncSoundCloudTrackListViewModel = syncSoundCloudTrackListViewModel;
-        _soundCloudService = soundCloudService;
         _logger = logger;
     }
 
@@ -55,8 +52,7 @@ public sealed class PopupSoundCloudTrackInfoPanelViewModel : SoundCloudTrackInfo
             return false;
         }
 
-        var persistedTrackIds = _syncSoundCloudTrackListViewModel.GetPersistedPlaylistTrackIds();
-        var persisted = await _soundCloudService.ReplacePlaylistTracksAsync(playlistId, persistedTrackIds);
+        var persisted = await _syncSoundCloudTrackListViewModel.PersistCurrentPlaylistOrderAsync();
         if (persisted)
         {
             IsPickPlaceholderMode = false;

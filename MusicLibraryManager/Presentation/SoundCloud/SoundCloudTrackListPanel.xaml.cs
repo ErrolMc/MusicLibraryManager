@@ -15,6 +15,10 @@ public sealed partial class SoundCloudTrackListPanel : UserControl
     private static readonly Brush PressedBrush = (Brush)Application.Current.Resources["OutlineBrush"];
     private ScrollViewer? _listScrollViewer;
     private readonly TranslateTransform _dragGhostTransform = new();
+    private bool _isTrackPressPending;
+    private bool _isTrackReorderDragging;
+    private Point _trackPressStartPoint;
+    private SoundCloudSearchItemViewModel? _pressedTrackItem;
 
     public event EventHandler<double>? VerticalOffsetChanged;
     public double ScrollableHeight => _listScrollViewer?.ScrollableHeight ?? 0;
@@ -174,6 +178,8 @@ public sealed partial class SoundCloudTrackListPanel : UserControl
 
     private void SoundCloudTrackListPanel_PointerMoved(object sender, PointerRoutedEventArgs e)
     {
+        TryStartTrackReorderDrag(e);
+
         if (ViewModel is null || (!ViewModel.IsInsertPaletteDragging && !ViewModel.IsNewInsertDragging))
         {
             return;
@@ -182,8 +188,23 @@ public sealed partial class SoundCloudTrackListPanel : UserControl
         UpdateDragGhostAndTarget(e);
     }
 
-    private void SoundCloudTrackListPanel_PointerReleased(object sender, PointerRoutedEventArgs e)
+    private async void SoundCloudTrackListPanel_PointerReleased(object sender, PointerRoutedEventArgs e)
     {
+        if (_isTrackReorderDragging)
+        {
+            _isTrackReorderDragging = false;
+            _isTrackPressPending = false;
+            _pressedTrackItem = null;
+            await CompleteTrackReorderDragAsync();
+            return;
+        }
+
+        if (_isTrackPressPending)
+        {
+            _isTrackPressPending = false;
+            _pressedTrackItem = null;
+        }
+
         if (ViewModel is null || (!ViewModel.IsInsertPaletteDragging && !ViewModel.IsNewInsertDragging))
         {
             return;
@@ -238,15 +259,40 @@ public sealed partial class SoundCloudTrackListPanel : UserControl
         {
             border.Background = PressedBrush;
             border.CapturePointer(e.Pointer);
+
+            if (border.DataContext is SoundCloudSearchItemViewModel item &&
+                ViewModel?.IsReorderCandidate(item) == true &&
+                e.GetCurrentPoint(border).Properties.IsLeftButtonPressed)
+            {
+                _isTrackPressPending = true;
+                _isTrackReorderDragging = false;
+                _pressedTrackItem = item;
+                _trackPressStartPoint = e.GetCurrentPoint(this).Position;
+            }
         }
     }
 
-    private void SearchItem_PointerReleased(object sender, PointerRoutedEventArgs e)
+    private async void SearchItem_PointerReleased(object sender, PointerRoutedEventArgs e)
     {
         if (sender is Border border)
         {
             border.Background = HoverBrush;
             border.ReleasePointerCapture(e.Pointer);
+
+            if (_isTrackReorderDragging)
+            {
+                _isTrackReorderDragging = false;
+                _isTrackPressPending = false;
+                _pressedTrackItem = null;
+                await CompleteTrackReorderDragAsync();
+                return;
+            }
+
+            if (_isTrackPressPending)
+            {
+                _isTrackPressPending = false;
+                _pressedTrackItem = null;
+            }
 
             if (border.DataContext is SoundCloudSearchItemViewModel item)
             {
@@ -378,6 +424,29 @@ public sealed partial class SoundCloudTrackListPanel : UserControl
         ViewModel.SetDropTargetIndex(CalculateDropTargetIndex(point));
     }
 
+    private void TryStartTrackReorderDrag(PointerRoutedEventArgs e)
+    {
+        if (!_isTrackPressPending || _isTrackReorderDragging || ViewModel is null || _pressedTrackItem is null)
+        {
+            return;
+        }
+
+        var point = e.GetCurrentPoint(this).Position;
+        var deltaX = point.X - _trackPressStartPoint.X;
+        var deltaY = point.Y - _trackPressStartPoint.Y;
+        var movedDistanceSquared = (deltaX * deltaX) + (deltaY * deltaY);
+        if (movedDistanceSquared < 25)
+        {
+            return;
+        }
+
+        _isTrackPressPending = false;
+        _isTrackReorderDragging = true;
+        DragGhost.Visibility = Visibility.Visible;
+        ViewModel.BeginTrackReorderDrag(_pressedTrackItem);
+        UpdateDragGhostAndTarget(e);
+    }
+
     // panelPoint is in SoundCloudTrackListPanel coordinate space
     private int CalculateDropTargetIndex(Point panelPoint)
     {
@@ -448,6 +517,19 @@ public sealed partial class SoundCloudTrackListPanel : UserControl
             ViewModel.EndInsertPaletteDrag();
         }
 
+        this.ReleasePointerCaptures();
+        DragGhost.Visibility = Visibility.Collapsed;
+    }
+
+    private async Task CompleteTrackReorderDragAsync()
+    {
+        if (ViewModel is null)
+        {
+            DragGhost.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        await ViewModel.CompleteTrackReorderDragAsync();
         this.ReleasePointerCaptures();
         DragGhost.Visibility = Visibility.Collapsed;
     }

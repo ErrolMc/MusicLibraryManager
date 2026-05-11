@@ -183,17 +183,17 @@ public class SoundCloudService : ISoundCloudService
         return [];
     }
 
-    public async Task<bool> AppendTracksToPlaylistAsync(long playlistId, IReadOnlyList<long> trackIds)
+    public async Task<bool> AppendTracksToPlaylistAsync(long playlistId, IReadOnlyList<long> trackIds, CancellationToken cancellationToken = default)
     {
         if (trackIds.Count == 0)
         {
             return true;
         }
 
-        return await UpdatePlaylistTracksAsync(playlistId, trackIds, mergeWithExisting: true);
+        return await UpdatePlaylistTracksAsync(playlistId, trackIds, mergeWithExisting: true, cancellationToken);
     }
 
-    public async Task<bool> RemoveTrackFromPlaylistAsync(long playlistId, long trackId)
+    public async Task<bool> RemoveTrackFromPlaylistAsync(long playlistId, long trackId, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -210,7 +210,12 @@ public class SoundCloudService : ISoundCloudService
                 return true;
             }
 
-            return await UpdatePlaylistTracksAsync(playlistId, remainingTrackIds, mergeWithExisting: false);
+            return await UpdatePlaylistTracksAsync(playlistId, remainingTrackIds, mergeWithExisting: false, cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("[SoundCloudService] RemoveTrackFromPlaylistAsync canceled. PlaylistId={PlaylistId}, TrackId={TrackId}", playlistId, trackId);
+            return false;
         }
         catch (Exception ex)
         {
@@ -219,12 +224,12 @@ public class SoundCloudService : ISoundCloudService
         }
     }
 
-    public async Task<bool> ReplacePlaylistTracksAsync(long playlistId, IReadOnlyList<long> trackIds)
+    public async Task<bool> ReplacePlaylistTracksAsync(long playlistId, IReadOnlyList<long> trackIds, CancellationToken cancellationToken = default)
     {
-        return await UpdatePlaylistTracksAsync(playlistId, trackIds, mergeWithExisting: false);
+        return await UpdatePlaylistTracksAsync(playlistId, trackIds, mergeWithExisting: false, cancellationToken);
     }
 
-    private async Task<bool> UpdatePlaylistTracksAsync(long playlistId, IReadOnlyList<long> trackIds, bool mergeWithExisting)
+    private async Task<bool> UpdatePlaylistTracksAsync(long playlistId, IReadOnlyList<long> trackIds, bool mergeWithExisting, CancellationToken cancellationToken = default)
     {
 
         string? accessToken = await _authService.GetAccessTokenAsync();
@@ -241,7 +246,7 @@ public class SoundCloudService : ISoundCloudService
             playlistRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("OAuth", accessToken);
             playlistRequest.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-            var playlistResponse = await _httpClient.SendAsync(playlistRequest);
+            var playlistResponse = await _httpClient.SendAsync(playlistRequest, cancellationToken);
             if (!playlistResponse.IsSuccessStatusCode)
             {
                 var details = await playlistResponse.Content.ReadAsStringAsync();
@@ -281,7 +286,7 @@ public class SoundCloudService : ISoundCloudService
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("OAuth", accessToken);
             request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-            var response = await _httpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request, cancellationToken);
             if (!response.IsSuccessStatusCode)
             {
                 var details = await response.Content.ReadAsStringAsync();
@@ -307,7 +312,7 @@ public class SoundCloudService : ISoundCloudService
                     formRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("OAuth", accessToken);
                     formRequest.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-                    var formResponse = await _httpClient.SendAsync(formRequest);
+                    var formResponse = await _httpClient.SendAsync(formRequest, cancellationToken);
                     if (!formResponse.IsSuccessStatusCode)
                     {
                         var formDetails = await formResponse.Content.ReadAsStringAsync();
@@ -325,6 +330,11 @@ public class SoundCloudService : ISoundCloudService
 
             _logger.LogInformation("[SoundCloudService] Playlist update completed. PlaylistId={PlaylistId}, FinalTrackCount={Count}", playlistId, serializedTrackIds.Count);
             return true;
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("[SoundCloudService] Playlist update canceled. PlaylistId={PlaylistId}", playlistId);
+            return false;
         }
         catch (Exception ex)
         {
