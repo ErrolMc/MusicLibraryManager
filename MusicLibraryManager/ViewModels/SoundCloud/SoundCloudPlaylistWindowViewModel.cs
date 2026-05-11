@@ -45,7 +45,8 @@ public partial class SoundCloudPlaylistWindowViewModel : ObservableObject
 
         try
         {
-            if (!_soundCloudAuthService.IsAuthenticated)
+            var isAuthenticated = _soundCloudAuthService.IsAuthenticated || await _soundCloudAuthService.TryLoadStoredTokensAsync();
+            if (!isAuthenticated)
             {
                 var authenticated = await _soundCloudAuthService.StartOAuthFlowAsync();
                 if (!authenticated)
